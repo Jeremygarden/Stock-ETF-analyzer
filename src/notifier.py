@@ -13,13 +13,118 @@ class SignalNotifier:
         self.webhook_url = os.environ.get('DISCORD_WEBHOOK', '')
         
     def send_signals(self, recommendations):
-        """发送信号到各个渠道"""
-        # 输出到控制台
+        """发送信号到各个渠道 (v1 兼容)"""
         self._send_to_console(recommendations)
         
-        # 如果有webhook，发送到Discord
         if self.webhook_url:
             self._send_to_discord(recommendations)
+    
+    def send_signals_v2(self, recommendations):
+        """发送v2高级信号"""
+        self._send_to_console_v2(recommendations)
+        
+        if self.webhook_url:
+            self._send_to_discord_v2(recommendations)
+    
+    def _send_to_console_v2(self, recommendations):
+        """v2控制台输出"""
+        print("\n" + "="*70)
+        print("📊 ETF轮动信号报告 v2.0 (多因子模型)")
+        print("="*70)
+        
+        if 'error' in recommendations:
+            print(f"❌ 错误: {recommendations['error']}")
+            return
+        
+        summary = recommendations.get('summary', {})
+        
+        print(f"\n📈 信号统计:")
+        print(f"   买入信号: {', '.join(summary.get('buy_signals', [])) or '无'}")
+        print(f"   持有信号: {', '.join(summary.get('hold_signals', [])) or '无'}")
+        
+        # 权重配置
+        weights = recommendations.get('weights', {})
+        if weights.get('risk_parity'):
+            print(f"\n⚖️ 风险平价权重:")
+            for ticker, weight in list(weights['risk_parity'].items())[:5]:
+                print(f"   {ticker}: {weight*100:.1f}%")
+        
+        # 因子分析
+        factor_analysis = recommendations.get('factor_analysis', {})
+        if factor_analysis:
+            print(f"\n🔬 因子分析:")
+            for factor, info in factor_analysis.items():
+                print(f"   {factor}: {info['top_etf']} ({info['score']:.1f})")
+        
+        # 完整排名
+        print(f"\n📊 完整排名 (多因子综合):")
+        print("-"*70)
+        print(f"{'代码':<6} {'类别':<10} {'20日%':<8} {'综合分':<8} {'信号':<6}")
+        print("-"*70)
+        
+        for etf in recommendations.get('all_rankings', [])[:10]:
+            cat = etf.get('category', '')[:8]
+            print(f"{etf['ticker']:<6} {cat:<10} {etf['return_20d']:>+7.2f}% {etf['composite_score']:>+7.2f}  {etf.get('signal', '-'):<6}")
+        
+        # 止损
+        watch = recommendations.get('stop_loss_watch', {})
+        if watch.get('warning') or watch.get('force_exit'):
+            print(f"\n⚠️ 止损提醒:")
+            for item in watch.get('warning', []):
+                print(f"   {item['ticker']}: {item['return_20d']:.2f}% - 关注")
+            for item in watch.get('force_exit', []):
+                print(f"   {item['ticker']}: {item['return_20d']:.2f}% - 强制平仓!")
+        
+        print("\n" + "="*70)
+    
+    def _send_to_discord_v2(self, recommendations):
+        """v2 Discord输出"""
+        import requests
+        
+        if 'error' in recommendations:
+            return
+        
+        summary = recommendations.get('summary', {})
+        
+        embed = {
+            "title": "📊 ETF轮动信号 v2.0",
+            "description": f"多因子模型 | {recommendations.get('generated_at', '')[:19]}",
+            "color": 3066993,
+            "fields": [
+                {
+                    "name": "🟢 买入信号",
+                    "value": ", ".join(summary.get('buy_signals', []))[:100] or "无",
+                    "inline": False
+                }
+            ]
+        }
+        
+        # 添加权重
+        weights = recommendations.get('weights', {})
+        if weights.get('risk_parity'):
+            wp = weights['risk_parity']
+            weight_text = "\n".join([f"{t}: {w*100:.1f}%" for t, w in list(wp.items())[:5]])
+            embed["fields"].append({
+                "name": "⚖️ 风险平价权重",
+                "value": weight_text
+            })
+        
+        # Top 5
+        rankings = "\n".join([
+            f"{i+1}. {e['ticker']} ({e['return_20d']:+.1f}%) [{e.get('signal', '-')}]"
+            for i, e in enumerate(recommendations.get('all_rankings', [])[:5])
+        ])
+        embed["fields"].append({
+            "name": "📈 Top 5",
+            "value": rankings
+        })
+        
+        data = {"embeds": [embed]}
+        
+        try:
+            response = requests.post(self.webhook_url, json=data)
+        except:
+            pass
             
     def _send_to_console(self, recommendations):
         """输出到控制台"""

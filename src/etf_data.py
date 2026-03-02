@@ -104,6 +104,33 @@ class ETFDataFetcher:
         if older_vol == 0:
             return 0
         return ((recent_vol / older_vol) - 1) * 100
+    
+    def fetch_price_history(self, tickers, days=90):
+        """获取历史价格用于相关性计算"""
+        import pandas as pd
+        
+        try:
+            all_prices = {}
+            
+            for ticker in tickers:
+                try:
+                    etf = yf.Ticker(ticker)
+                    hist = etf.history(period=f'{days}d')
+                    if not hist.empty:
+                        all_prices[ticker] = hist['Close']
+                except:
+                    continue
+                import time
+                time.sleep(0.2)
+            
+            if all_prices:
+                df = pd.DataFrame(all_prices)
+                return df.to_dict()
+            
+        except Exception as e:
+            print(f"获取历史价格失败: {e}")
+        
+        return {}
 
 
 # 测试用

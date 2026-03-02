@@ -1,9 +1,20 @@
 """
 高级回测指标模块
-- 滚动回测 (Walk-forward)
-- 蒙特卡洛模拟
-- 多种风险指标
-- 防止过拟合
+================
+
+提供专业的回测分析功能,包括:
+- 基础收益指标 (总收益、夏普比率等)
+- 风险指标 (VaR、CVaR、最大回撤等)
+- 尾部风险 (偏度、峰度、盈亏比)
+- 稳定性检验 (防止过拟合)
+- Walk-forward滚动向前分析
+- Monte Carlo模拟
+- Bootstrap置信区间
+
+这些工具帮助评估策略的真实表现,避免过拟合。
+
+Author: Financer AI
+Date: 2026-03-02
 """
 
 import numpy as np
@@ -15,12 +26,28 @@ warnings.filterwarnings('ignore')
 
 
 class AdvancedBacktestMetrics:
+    """
+    高级回测指标计算器
+    
+    用于全面评估量化策略的表现,包含多种防止过拟合的检验方法。
+    """
+    
     def __init__(self):
         self.results = {}
     
     def calculate_all_metrics(self, returns, equity_curve=None, risk_free_rate=0.03):
         """
         计算完整的回测指标体系
+        
+        综合评估策略的收益、风险和稳定性。
+        
+        Args:
+            returns: 月度收益率序列
+            equity_curve: 权益曲线(可选)
+            risk_free_rate: 无风险利率(默认3%)
+            
+        Returns:
+            Dict: 包含所有指标的字典
         """
         if returns.empty:
             return {}

@@ -28,11 +28,19 @@ class DualStrategyModel:
     """
     
     # ==================== 策略一配置 ====================
-    # 长期动量策略 - 适合捕捉中长期趋势
+    # 长期动量策略 - 双动量增强版
+    # 核心思路:
+    # - CSMOM (横截面动量): 在ETF池中横向排名，取Top 20%
+    # - TSMOM (时序动量): 检查绝对动量是否为正，若为负则不持有
     STRATEGY_1_FACTORS = {
+        'dual_momentum': {
+            'factors': ['csmom_rank', 'tsmom_signal', 'relative_momentum', 'absolute_momentum'],
+            'weight': 0.35,
+            'description': '双动量 - CSMOM横截面排名 + TSMOM趋势确认'
+        },
         'momentum': {
-            'factors': ['momentum_1m', 'momentum_3m', 'momentum_accel', 'absolute_momentum'],
-            'weight': 0.30,
+            'factors': ['momentum_1m', 'momentum_3m', 'momentum_accel'],
+            'weight': 0.15,
             'description': '动量因子 - 捕捉价格趋势'
         },
         'value': {
@@ -42,7 +50,7 @@ class DualStrategyModel:
         },
         'quality': {
             'factors': ['roe', 'net_margin'],
-            'weight': 0.20,
+            'weight': 0.15,
             'description': '质量因子 - 盈利能力'
         },
         'growth': {
@@ -52,13 +60,8 @@ class DualStrategyModel:
         },
         'volatility': {
             'factors': ['volatility_1m'],
-            'weight': 0.10,
+            'weight': 0.15,
             'description': '波动率因子 - 风险控制'
-        },
-        'price_technical': {
-            'factors': ['mfi', 'cci', 'bb_pos', 'kurt_20'],
-            'weight': 0.20,
-            'description': '价格技术指标'
         }
     }
     
@@ -272,9 +275,22 @@ class DualStrategyModel:
             if 'ret_5d' in factors and 'ret_20d' in factors:
                 factors['momentum_accel'] = round(factors['ret_5d'] - factors['ret_20d'], 2)
             
-            # 绝对动量
+            # ===== 9. 双动量因子 (Dual Momentum) =====
+            # TSMOM (时序动量): 检查20日动量是否为正
             if 'ret_20d' in factors:
-                factors['absolute_momentum'] = 1 if factors['ret_20d'] > 0 else 0
+                factors['tsmom_signal'] = 1 if factors['ret_20d'] > 0 else 0
+                factors['absolute_momentum'] = factors['tsmom_signal']
+            
+            # TSMOM 6个月确认
+            if 'ret_60d' in factors:
+                factors['tsmom_6m'] = 1 if factors['ret_60d'] > 0 else 0
+            
+            # 相对动量 (CSMOM基础): 6个月收益作为横截面排名依据
+            if 'ret_60d' in factors:
+                factors['relative_momentum'] = factors['ret_60d']
+            
+            # CSMOM排名稍后计算 (需要全部ETF数据)
+            factors['csmom_rank'] = 0  # 临时值，后续批量计算
             
             # ===== 9. 基本面因子 =====
             # 盈利收益率
@@ -574,7 +590,9 @@ def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.Data
                 'ticker': ticker,
                 'composite_score': score_result['composite_score'],
                 'risk_level': risk_result['risk_level'],
-                'recommendation': risk_result['recommendation']
+                'recommendation': risk_result['recommendation'],
+                'tsmom_signal': factors.get('tsmom_signal', 0),
+                'relative_momentum': factors.get('relative_momentum', 0),
             }
             
             # 添加因子值
@@ -586,6 +604,18 @@ def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.Data
         time.sleep(0.2)
     
     df = pd.DataFrame(results)
+    
+    # ===== 计算CSMOM横截面动量排名 =====
+    # 基于6个月收益在所有ETF中的排名
+    if 'relative_momentum' in df.columns and len(df) > 0:
+        # 计算百分位排名 (0-100)
+        df['csmom_rank'] = df['relative_momentum'].rank(pct=True) * 100
+        
+        # 双动量过滤: 只保留TSMOM为正的ETF
+        if 'tsmom_signal' in df.columns:
+            # 对于TSMOM为负的，大幅降低得分
+            df.loc[df['tsmom_signal'] == 0, 'composite_score'] *= 0.3
+    
     return df.sort_values('composite_score', ascending=False)
 
 

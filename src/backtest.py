@@ -91,7 +91,18 @@ class ETFBacktester:
         # 延后几天确保有数据
         start = start_date - timedelta(days=10)
         
-        data = yf.download(tickers, start=start, end=end_date, progress=False)['Adj Close']
+        data = yf.download(tickers, start=start, end=end_date, progress=False)
+        
+        # 处理新版yfinance返回格式
+        if isinstance(data, pd.DataFrame):
+            if 'Adj Close' in data.columns.get_level_values(0) if isinstance(data.columns, pd.MultiIndex) else data.columns:
+                data = data['Adj Close']
+            elif 'Close' in data.columns.get_level_values(0) if isinstance(data.columns, pd.MultiIndex) else data.columns:
+                data = data['Close']
+            else:
+                # 直接使用所有列
+                if isinstance(data.columns, pd.MultiIndex):
+                    data = data.droplevel(0, axis=1)
         
         # 只保留回测期间的数据
         data = data[data.index >= start_date]
@@ -104,7 +115,7 @@ class ETFBacktester:
         trades = []
         
         # 按月回测
-        monthly_returns = returns.resample('M').agg(lambda x: (1+x).prod() - 1)
+        monthly_returns = returns.resample('ME').agg(lambda x: (1+x).prod() - 1)
         
         for i in range(1, len(monthly_returns)):
             # 获取过去20日收益
@@ -138,8 +149,8 @@ class ETFBacktester:
                 })
         
         portfolio_returns = pd.Series(
-            [pportfolio_value[i] / portfolio_value[i-1] - 1 for i in range(1, len(portfolio_value))],
-            index=price_data.resample('M').first().index[1:len(portfolio_value)]
+            [portfolio_value[i] / portfolio_value[i-1] - 1 for i in range(1, len(portfolio_value))],
+            index=price_data.resample('ME').first().index[1:len(portfolio_value)]
         )
         
         return {
@@ -153,7 +164,7 @@ class ETFBacktester:
         portfolio_value = [self.initial_capital]
         trades = []
         
-        monthly_returns = returns.resample('M').agg(lambda x: (1+x).prod() - 1)
+        monthly_returns = returns.resample('ME').agg(lambda x: (1+x).prod() - 1)
         
         for i in range(1, len(monthly_returns)):
             lookback_idx = max(0, i-1)
@@ -197,7 +208,7 @@ class ETFBacktester:
         
         portfolio_returns = pd.Series(
             [portfolio_value[i] / portfolio_value[i-1] - 1 for i in range(1, len(portfolio_value))],
-            index=price_data.resample('M').first().index[1:len(portfolio_value)]
+            index=price_data.resample('ME').first().index[1:len(portfolio_value)]
         )
         
         return {
@@ -211,7 +222,7 @@ class ETFBacktester:
         portfolio_value = [self.initial_capital]
         trades = []
         
-        monthly_returns = returns.resample('M').agg(lambda x: (1+x).prod() - 1)
+        monthly_returns = returns.resample('ME').agg(lambda x: (1+x).prod() - 1)
         
         for i in range(1, len(monthly_returns)):
             lookback_idx = max(0, i-1)
@@ -236,7 +247,7 @@ class ETFBacktester:
             top_tickers = [t[0] for t in sorted_by_vol]
             
             # 应用风险平价权重
-            month_ret = sum(weights.get(t, 0) * monthly_returns[ticker].iloc[i] 
+            month_ret = sum(weights.get(ticker, 0) * monthly_returns[ticker].iloc[i] 
                           for ticker in top_tickers if ticker in monthly_returns.columns)
             
             new_value = portfolio_value[-1] * (1 + month_ret)
@@ -251,7 +262,7 @@ class ETFBacktester:
         
         portfolio_returns = pd.Series(
             [portfolio_value[i] / portfolio_value[i-1] - 1 for i in range(1, len(portfolio_value))],
-            index=price_data.resample('M').first().index[1:len(portfolio_value)]
+            index=price_data.resample('ME').first().index[1:len(portfolio_value)]
         )
         
         return {
@@ -265,7 +276,7 @@ class ETFBacktester:
         portfolio_value = [self.initial_capital]
         trades = []
         
-        monthly_returns = returns.resample('M').agg(lambda x: (1+x).prod() - 1)
+        monthly_returns = returns.resample('ME').agg(lambda x: (1+x).prod() - 1)
         
         for i in range(1, len(monthly_returns)):
             lookback_idx = max(0, i-1)
@@ -310,7 +321,7 @@ class ETFBacktester:
         
         portfolio_returns = pd.Series(
             [portfolio_value[i] / portfolio_value[i-1] - 1 for i in range(1, len(portfolio_value))],
-            index=price_data.resample('M').first().index[1:len(portfolio_value)]
+            index=price_data.resample('ME').first().index[1:len(portfolio_value)]
         )
         
         return {

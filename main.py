@@ -1,8 +1,6 @@
 """
-ETF轮动系统主程序 (v2.1)
-- 基础轮动模式
-- 高级多因子模式
-- 回测模式 (含高级指标)
+ETF轮动系统主程序 (v3.0)
+专业版 - 多因子模型 + 专业数据源
 """
 
 import os
@@ -12,7 +10,8 @@ import json
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from etf_data import ETFDataFetcher
+from data_source import ETFDataSource, FactorModel
+from factor_analysis import FactorAnalyzer, generate_factor_report
 from advanced_rotator import AdvancedETFRotator
 from backtest import ETFBacktester
 from backtest_metrics import AdvancedBacktestMetrics, print_advanced_report
@@ -20,160 +19,169 @@ from notifier import SignalNotifier
 from config import ETF_CONFIG
 
 
-def run_rotation(mode='advanced'):
-    """运行轮动分析"""
-    print(f"\n{'='*60}")
-    print(f"ETF轮动系统 v2.0 - {mode}模式")
-    print(f"{'='*60}")
+def run_professional_rotation():
+    """运行专业版轮动分析"""
+    print(f"\n{'='*70}")
+    print(f"ETF轮动系统 v3.0 - 专业因子模型版")
+    print(f"{'='*70}")
     print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     
-    # 1. 获取ETF数据
-    print("[1/4] 正在获取ETF数据...")
-    fetcher = ETFDataFetcher()
-    etf_data = fetcher.fetch_all_etfs()
-    
-    # 获取历史数据用于相关性计算
-    all_tickers = list(etf_data.keys())
-    price_history = fetcher.fetch_price_history(all_tickers, days=90)
-    
-    # 2. 计算信号
-    print("[2/4] 正在计算多因子信号...")
-    rotator = AdvancedETFRotator()
-    signals = rotator.calculate_advanced_signals(etf_data, price_history)
-    
-    # 3. 生成建议
-    print("[3/4] 正在生成轮动建议...")
-    recommendations = rotator.generate_advanced_recommendations(signals, etf_data, price_history)
-    
-    # 4. 输出信号
-    print("[4/4] 正在输出信号...")
-    notifier = SignalNotifier()
-    notifier.send_signals_v2(recommendations)
-    
-    # 保存结果
-    save_results(recommendations, 'rotation')
-    
-    print(f"\n✅ 轮动分析完成!")
-    return recommendations
-
-
-def run_backtest(etf_pool=None, strategy='advanced'):
-    """运行回测"""
-    if etf_pool is None:
-        from config import ETF_CONFIG
-        all_etfs = {}
-        all_etfs.update(ETF_CONFIG['sector_etfs'])
-        all_etfs.update(ETF_CONFIG['emerging_etfs'])
-        all_etfs.update(ETF_CONFIG['option_income_etfs'])
-        etf_pool = list(all_etfs.keys())
-    
-    print(f"\n{'='*60}")
-    print(f"ETF回测模式")
-    print(f"{'='*60}")
-    
-    backtester = ETFBacktester(initial_capital=100000)
-    
-    # 对比所有策略
-    results = backtester.compare_strategies(
-        etf_pool,
-        start_date=datetime(2024, 1, 1),
-        end_date=datetime.now()
-    )
-    
-    # 保存结果
-    backtester.save_results('output/backtest_results.json')
-    
-    return results
-
-
-def run_advanced_backtest(strategy='dual_momentum'):
-    """运行高级回测 (含防止过拟合指标)"""
-    import pandas as pd
-    from config import ETF_CONFIG
+    # 1. 准备ETF列表
     all_etfs = {}
     all_etfs.update(ETF_CONFIG['sector_etfs'])
     all_etfs.update(ETF_CONFIG['emerging_etfs'])
     all_etfs.update(ETF_CONFIG['option_income_etfs'])
-    etf_pool = list(all_etfs.keys())
+    all_etfs.update(ETF_CONFIG['benchmark_etfs'])
+    etf_tickers = list(all_etfs.keys())
     
-    print(f"\n{'='*60}")
-    print(f"高级回测分析 (防止过拟合)")
-    print(f"{'='*60}")
-    print(f"策略: {strategy}")
-    print(f"ETF池: {len(etf_pool)}个\n")
+    # 2. 获取专业数据
+    print("[1/5] 正在获取专业数据...")
+    ds = ETFDataSource()
+    etf_data = ds.fetch_market_data(etf_tickers)
     
-    # 运行基础回测获取收益序列
-    backtester = ETFBacktester(initial_capital=100000)
-    result = backtester.run_backtest(
-        etf_pool,
-        strategy=strategy,
-        start_date=datetime(2023, 1, 1),
-        end_date=datetime.now()
-    )
+    # 3. 计算因子
+    print("[2/5] 正在计算因子...")
+    fm = FactorModel()
+    factor_matrix = fm.calculate_factors(etf_data)
     
-    if 'error' in result:
-        print(f"回测错误: {result['error']}")
-        return
+    # 4. 因子分析
+    print("[3/5] 正在分析因子有效性...")
+    fa = FactorAnalyzer()
     
-    # 获取月度收益序列
-    returns = pd.Series(result.get('monthly_returns', {}))
-    if returns.empty:
-        print("无收益数据")
-        return
+    # 计算因子相关性矩阵
+    factor_corr = fa.factor_correlation_matrix(factor_matrix)
+    print(f"\n因子相关性:\n{factor_corr.round(2)}")
     
-    # 转换为合适格式
-    returns = returns / 100  # 转为小数
+    # 5. 生成信号
+    print("[4/5] 正在生成轮动信号...")
+    rotator = AdvancedETFRotator()
     
-    # 高级指标分析
-    analyzer = AdvancedBacktestMetrics()
-    report = analyzer.generate_report(returns)
+    # 转换数据格式
+    simple_data = {}
+    for ticker, data in etf_data.items():
+        if data.get('success'):
+            pf = data.get('price_factors', {})
+            simple_data[ticker] = {
+                'ticker': ticker,
+                'name': all_etfs.get(ticker, {}).get('name', ''),
+                'category': all_etfs.get(ticker, {}).get('category', ''),
+                'current_price': list(pf.values())[0] if pf else 0,
+                'return_5d': pf.get('momentum_5d', 0),
+                'return_20d': pf.get('momentum_20d', 0),
+                'return_60d': pf.get('momentum_60d', 0),
+                'volatility_20d': pf.get('volatility_20d', 0),
+                'volume_change': pf.get('volume_ratio', 0),
+            }
     
-    # 打印报告
-    print_advanced_report(report)
+    signals = rotator.calculate_advanced_signals(simple_data)
+    recommendations = rotator.generate_advanced_recommendations(signals, simple_data)
     
-    # 保存报告
-    output_dir = os.path.join(os.path.dirname(__file__), 'output')
-    os.makedirs(output_dir, exist_ok=True)
+    # 6. 输出信号
+    print("[5/5] 正在输出信号...")
+    notifier = SignalNotifier()
+    notifier.send_signals_v2(recommendations)
     
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    with open(f'{output_dir}/advanced_backtest_{timestamp}.json', 'w') as f:
-        json.dump(report, f, indent=2, default=str)
+    # 保存结果
+    save_results({
+        'etf_data': etf_data,
+        'factor_matrix': factor_matrix.to_dict(),
+        'factor_correlations': factor_corr.to_dict(),
+        'recommendations': recommendations
+    }, 'professional')
     
-    print(f"\n✅ 高级回测报告已保存")
+    print(f"\n✅ 专业分析完成!")
+    return recommendations
+
+
+def run_factor_analysis():
+    """运行因子有效性分析"""
+    print(f"\n{'='*70}")
+    print(f"因子有效性分析")
+    print(f"{'='*70}\n")
+    
+    # 获取数据
+    all_etfs = {}
+    all_etfs.update(ETF_CONFIG['sector_etfs'])
+    all_etfs.update(ETF_CONFIG['emerging_etfs'])
+    all_etfs.update(ETF_CONFIG['option_income_etfs'])
+    etf_tickers = list(all_etfs.keys())
+    
+    ds = ETFDataSource()
+    etf_data = ds.fetch_market_data(etf_tickers)
+    
+    # 计算因子
+    fm = FactorModel()
+    factor_matrix = fm.calculate_factors(etf_data)
+    
+    # 因子分析
+    fa = FactorAnalyzer()
+    
+    # 因子相关性
+    print("\n📊 因子相关性矩阵:")
+    corr = fa.factor_correlation_matrix(factor_matrix)
+    print(corr.round(3))
+    
+    # 正交化
+    print("\n🔧 因子正交化...")
+    orthogonalized = fa.factor_neutralization(factor_matrix)
+    print("因子正交化完成")
+    
+    # 保存分析结果
+    save_results({
+        'factor_matrix': factor_matrix.to_dict(),
+        'factor_correlations': corr.to_dict(),
+        'orthogonalized': orthogonalized.to_dict()
+    }, 'factor_analysis')
+    
+    return factor_matrix
 
 
 def save_results(data, prefix='signals'):
-    """保存结果到文件"""
+    """保存结果"""
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
     os.makedirs(output_dir, exist_ok=True)
     
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
+    # 转换numpy类型
+    def convert(obj):
+        if isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+        elif pd.api.is_categorical_dtype(obj):
+            return obj.tolist()
+        return obj
+    
+    import numpy as np
+    import pandas as pd
+    
     with open(f'{output_dir}/{prefix}_{timestamp}.json', 'w') as f:
-        json.dump(data, f, indent=2, default=str)
+        json.dump(data, f, indent=2, default=convert)
     
     with open(f'{output_dir}/latest.json', 'w') as f:
-        json.dump(data, f, indent=2, default=str)
+        json.dump(data, f, indent=2, default=convert)
 
 
 def main():
     import argparse
     
-    parser = argparse.ArgumentParser(description='ETF轮动系统')
-    parser.add_argument('--mode', choices=['rotation', 'backtest', 'backtest-advanced', 'both'], 
-                       default='rotation', help='运行模式')
-    parser.add_argument('--strategy', default='dual_momentum', 
-                       help='回测策略 (momentum/dual_momentum/risk_parity/advanced)')
+    parser = argparse.ArgumentParser(description='ETF轮动系统 v3.0')
+    parser.add_argument('--mode', 
+                       choices=['rotation', 'factor', 'backtest', 'backtest-advanced'], 
+                       default='rotation', 
+                       help='运行模式')
+    parser.add_argument('--strategy', 
+                       default='dual_momentum', 
+                       help='回测策略')
     
     args = parser.parse_args()
     
-    if args.mode in ['rotation', 'both']:
-        run_rotation()
-    
-    if args.mode == 'backtest':
+    if args.mode == 'rotation':
+        run_professional_rotation()
+    elif args.mode == 'factor':
+        run_factor_analysis()
+    elif args.mode == 'backtest':
         run_backtest(strategy=args.strategy)
-    
-    if args.mode == 'backtest-advanced':
+    elif args.mode == 'backtest-advanced':
         run_advanced_backtest(strategy=args.strategy)
 
 

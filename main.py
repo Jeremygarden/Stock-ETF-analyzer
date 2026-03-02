@@ -1,6 +1,8 @@
 """
-ETF轮动系统主程序 (v3.1)
-24因子专业版
+ETF轮动系统主程序 (v4.0)
+支持双策略选择:
+- 策略一: 长期动量策略 (基本面+技术面)
+- 策略二: 短期机会策略 (纯技术面)
 """
 
 import os
@@ -12,17 +14,14 @@ import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from twenty_four_factors import TwentyFourFactorModel
-from backtest import ETFBacktester
-from backtest_metrics import AdvancedBacktestMetrics, print_advanced_report
-from notifier import SignalNotifier
+from dual_strategy import DualStrategyModel, calculate_portfolio_scores
 from config import ETF_CONFIG
 
 
-def run_24factor_analysis():
-    """运行24因子分析"""
+def run_dual_strategy(strategy: int = 1):
+    """运行双策略分析"""
     print(f"\n{'='*70}")
-    print(f"ETF轮动系统 v3.1 - 24因子专业版")
+    print(f"ETF轮动系统 v4.0 - {'策略一(长期动量)' if strategy == 1 else '策略二(短期机会)'}")
     print(f"{'='*70}")
     print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     
@@ -34,109 +33,101 @@ def run_24factor_analysis():
     all_etfs.update(ETF_CONFIG['benchmark_etfs'])
     etf_tickers = list(all_etfs.keys())
     
-    # 2. 计算24因子
-    print("[1/3] 正在计算24个量化因子...")
-    model = TwentyFourFactorModel()
-    factor_matrix = model.calculate_factor_matrix(etf_tickers)
+    # 2. 计算得分
+    print(f"[1/2] 正在计算{len(etf_tickers)}个ETF的因子和得分...")
+    results_df = calculate_portfolio_scores(etf_tickers, strategy=strategy)
     
-    # 3. 数据处理
-    print("[2/3] 正在处理因子数据...")
+    # 3. 输出结果
+    print(f"\n[2/2] 输出结果...\n")
     
-    # 去除无效因子列
-    valid_cols = [c for c in factor_matrix.columns 
-                 if c not in ['ticker', 'error', 'success'] and factor_matrix[c].notna().sum() > 5]
-    factor_matrix = factor_matrix[valid_cols]
+    model = DualStrategyModel(strategy=strategy)
+    factor_list = model.get_recommended_factors()
     
-    # 去极值
-    factor_matrix = model.winsorize_factors(factor_matrix)
-    
-    # 标准化
-    std_matrix = model.standardize_factors(factor_matrix)
-    
-    # 生成综合得分
-    composite_scores = model.generate_composite_score(factor_matrix)
-    
-    # 4. 输出结果
-    print("[3/3] 正在输出信号...\n")
-    
-    # 因子分类汇总
+    # 打印配置
     print("="*70)
-    print("📊 24因子分析报告")
+    strategy_name = "策略一(长期动量)" if strategy == 1 else "策略二(短期机会)"
+    print(f"📊 {strategy_name} - 因子配置")
     print("="*70)
     
-    # 因子统计
-    print(f"\n📈 因子覆盖: {len(valid_cols)}/{len(model.factor_names)}")
+    for group, config in model.factor_config.items():
+        print(f"\n【{config['description']}】权重: {config['weight']*100:.0f}%")
+        print(f"   因子: {', '.join(config['factors'])}")
     
-    # 动量因子
-    momentum_cols = [c for c in valid_cols if 'momentum' in c and 'vol' not in c]
-    if momentum_cols:
-        print(f"\n🔥 动量因子 ({len(momentum_cols)}个):")
-        for c in momentum_cols:
-            valid_data = factor_matrix[c].dropna()
-            if len(valid_data) > 0:
-                best_etf = valid_data.idxmax()
-                best_val = valid_data.max()
-                print(f"   {c}: {best_etf} ({best_val:+.1f}%)")
+    # 打印结果
+    print(f"\n{'='*70}")
+    print(f"🏆 ETF排名 (按综合得分)")
+    print("="*70)
     
-    # 价值因子
-    value_cols = [c for c in valid_cols if c in ['dividend_yield', 'earnings_yield', 'book_value', 'cashflow']]
-    if value_cols:
-        print(f"\n💰 价值因子 ({len(value_cols)}个):")
-        for c in value_cols:
-            valid_data = factor_matrix[c].dropna()
-            if len(valid_data) > 0:
-                best_etf = valid_data.idxmax()
-                best_val = valid_data.max()
-                print(f"   {c}: {best_etf} ({best_val:.2f})")
+    # 简化显示列
+    display_cols = ['ticker', 'composite_score', 'risk_level', 'recommendation']
+    display_cols += [c for c in results_df.columns if c in factor_list[:4]]
     
-    # 质量因子
-    quality_cols = [c for c in valid_cols if c in ['roe', 'roa', 'gross_margin', 'net_margin', 'asset_turnover']]
-    if quality_cols:
-        print(f"\n✅ 质量因子 ({len(quality_cols)}个):")
-        for c in quality_cols:
-            valid_data = factor_matrix[c].dropna()
-            if len(valid_data) > 0:
-                best_etf = valid_data.idxmax()
-                best_val = valid_data.max()
-                print(f"   {c}: {best_etf} ({best_val:.1f}%)")
+    print(f"\n{'代码':<8} {'得分':<8} {'风险':<8} {'建议':<10} {'主要因子':<30}")
+    print("-"*70)
     
-    # 波动率因子
-    vol_cols = [c for c in valid_cols if 'volatil' in c]
-    if vol_cols:
-        print(f"\n📉 低波动因子 ({len(vol_cols)}个):")
-        for c in vol_cols:
-            valid_data = factor_matrix[c].dropna()
-            if len(valid_data) > 0:
-                best_etf = valid_data.idxmin()  # 低波动最好
-                best_val = valid_data.min()
-                print(f"   {c}: {best_etf} ({best_val:.1f}%)")
+    for _, row in results_df.head(10).iterrows():
+        # 获取主要因子
+        main_factors = []
+        for f in ['ret_20d', 'rsi_14', 'cci', 'vol_20']:
+            if f in row and pd.notna(row[f]):
+                main_factors.append(f"{f}={row[f]}")
+        
+        cat = all_etfs.get(row['ticker'], {}).get('category', '')[:6]
+        print(f"{row['ticker']:<8} {row['composite_score']:>7.1f} {row['risk_level']:<8} {row['recommendation']:<10} {cat}")
     
-    # Top ETF推荐
-    print(f"\n🏆 综合因子得分 Top 10:")
-    print("-"*50)
-    top_etfs = composite_scores.sort_values(ascending=False).head(10)
-    for i, (ticker, score) in enumerate(top_etfs.items(), 1):
-        cat = all_etfs.get(ticker, {}).get('category', '')
-        print(f"  {i:2d}. {ticker:<6} ({cat:<8}) 综合分: {score:+.3f}")
+    # 风险统计
+    print(f"\n⚠️ 风险统计:")
+    risk_counts = results_df['risk_level'].value_counts()
+    for level, count in risk_counts.items():
+        print(f"   {level}: {count}个")
     
     # 推荐持仓
-    print(f"\n📋 建议持仓 (Top 5):")
-    holdings = top_etfs.head(5)
-    for ticker, score in holdings.items():
-        weight = 1.0 / len(holdings)
-        print(f"  {ticker}: {weight*100:.1f}%")
+    print(f"\n📋 建议持仓 (Top 5, 排除HIGH风险):")
+    ok_holdings = results_df[results_df['risk_level'] != 'HIGH'].head(5)
+    for _, row in ok_holdings.iterrows():
+        weight = 1.0 / len(ok_holdings)
+        print(f"   {row['ticker']}: {weight*100:.1f}% (得分:{row['composite_score']:.1f})")
     
     print("\n" + "="*70)
     
     # 保存结果
-    save_results({
-        'factor_matrix': factor_matrix.to_dict(),
-        'standardized': std_matrix.to_dict(),
-        'composite_scores': composite_scores.to_dict(),
-        'top_etfs': composite_scores.sort_values(ascending=False).head(10).to_dict()
-    }, '24factor')
+    save_results(results_df.to_dict(), f'strategy{strategy}')
     
-    return factor_matrix
+    return results_df
+
+
+def compare_strategies():
+    """对比两个策略"""
+    print(f"\n{'='*70}")
+    print(f"📊 策略对比分析")
+    print(f"{'='*70}\n")
+    
+    # 运行两个策略
+    result1 = run_dual_strategy(strategy=1)
+    result2 = run_dual_strategy(strategy=2)
+    
+    # 对比
+    print(f"\n{'='*70}")
+    print(f"📈 策略对比结果")
+    print(f"{'='*70}")
+    
+    print(f"\n{'指标':<20} {'策略一':<15} {'策略二':<15}")
+    print("-"*50)
+    
+    # Top1
+    top1_1 = result1.iloc[0]['ticker'] if len(result1) > 0 else 'N/A'
+    top1_2 = result2.iloc[0]['ticker'] if len(result2) > 0 else 'N/A'
+    print(f"{'Top1推荐':<20} {top1_1:<15} {top1_2:<15}")
+    
+    # 平均得分
+    avg1 = result1['composite_score'].mean()
+    avg2 = result2['composite_score'].mean()
+    print(f"{'平均得分':<20} {avg1:<15.1f} {avg2:<15.1f}")
+    
+    # 高风险数量
+    high1 = (result1['risk_level'] == 'HIGH').sum()
+    high2 = (result2['risk_level'] == 'HIGH').sum()
+    print(f"{'高风险数量':<20} {high1:<15} {high2:<15}")
 
 
 def save_results(data, prefix='signals'):
@@ -156,25 +147,20 @@ def save_results(data, prefix='signals'):
 def main():
     import argparse
     
-    parser = argparse.ArgumentParser(description='ETF轮动系统 v3.1')
+    parser = argparse.ArgumentParser(description='ETF轮动系统 v4.0')
     parser.add_argument('--mode', 
-                       choices=['factor24', 'factor', 'rotation', 'backtest'], 
-                       default='factor24', 
+                       choices=['strategy1', 'strategy2', 'compare'], 
+                       default='strategy1', 
                        help='运行模式')
-    parser.add_argument('--strategy', 
-                       default='dual_momentum', 
-                       help='回测策略')
     
     args = parser.parse_args()
     
-    if args.mode == 'factor24':
-        run_24factor_analysis()
-    elif args.mode == 'factor':
-        run_factor_analysis()
-    elif args.mode == 'rotation':
-        run_professional_rotation()
-    elif args.mode == 'backtest':
-        run_backtest(strategy=args.strategy)
+    if args.mode == 'strategy1':
+        run_dual_strategy(strategy=1)
+    elif args.mode == 'strategy2':
+        run_dual_strategy(strategy=2)
+    elif args.mode == 'compare':
+        compare_strategies()
 
 
 if __name__ == '__main__':

@@ -1,0 +1,619 @@
+"""
+双策略ETF量化分析系统
+==================
+
+提供两套独立的策略:
+- 策略一: 长期动量策略 (基本面+技术面混合)
+- 策略二: 短期机会策略 (纯技术面)
+
+Author: Financer AI
+Date: 2026-03-02
+"""
+
+import numpy as np
+import pandas as pd
+from scipy import stats
+from typing import Dict, List, Optional
+import yfinance as yf
+from datetime import datetime
+
+
+class DualStrategyModel:
+    """
+    双策略量化模型
+    
+    提供两套策略选择:
+    - Strategy 1: 长期动量策略 (基本面+技术面)
+    - Strategy 2: 短期机会策略 (纯技术面)
+    """
+    
+    # ==================== 策略一配置 ====================
+    # 长期动量策略 - 适合捕捉中长期趋势
+    STRATEGY_1_FACTORS = {
+        'momentum': {
+            'factors': ['momentum_1m', 'momentum_3m', 'momentum_accel', 'absolute_momentum'],
+            'weight': 0.30,
+            'description': '动量因子 - 捕捉价格趋势'
+        },
+        'value': {
+            'factors': ['earnings_yield'],
+            'weight': 0.10,
+            'description': '价值因子 - 估值水平'
+        },
+        'quality': {
+            'factors': ['roe', 'net_margin'],
+            'weight': 0.20,
+            'description': '质量因子 - 盈利能力'
+        },
+        'growth': {
+            'factors': ['earnings_growth'],
+            'weight': 0.10,
+            'description': '成长因子 - 业绩增长'
+        },
+        'volatility': {
+            'factors': ['volatility_1m'],
+            'weight': 0.10,
+            'description': '波动率因子 - 风险控制'
+        },
+        'price_technical': {
+            'factors': ['mfi', 'cci', 'bb_pos', 'kurt_20'],
+            'weight': 0.20,
+            'description': '价格技术指标'
+        }
+    }
+    
+    # ==================== 策略二配置 ====================
+    # 短期机会策略 - 适合捕捉短期交易机会
+    STRATEGY_2_FACTORS = {
+        'short_term': {
+            'factors': ['ret_intraday', 'ret_1d'],
+            'weight': 0.20,
+            'description': '短期收益 - 日内和日度收益'
+        },
+        'technical': {
+            'factors': ['cci', 'adx', 'bb_pos', 'dist_ma10'],
+            'weight': 0.25,
+            'description': '技术指标 - 趋势和超买超卖'
+        },
+        'risk': {
+            'factors': ['kurt_20', 'skew_20'],
+            'weight': 0.15,
+            'description': '风险因子 - 极端风险预警'
+        },
+        'momentum': {
+            'factors': ['absolute_momentum'],
+            'weight': 0.15,
+            'description': '动量因子 - 趋势确认'
+        },
+        'liquidity': {
+            'factors': ['trading_volume', 'size', 'turnover_change'],
+            'weight': 0.25,
+            'description': '流动性因子 - 交易活跃度'
+        }
+    }
+    
+    def __init__(self, strategy: int = 1):
+        """
+        初始化策略模型
+        
+        Args:
+            strategy: 1 或 2
+        """
+        self.strategy = strategy
+        self.factor_config = self.STRATEGY_1_FACTORS if strategy == 1 else self.STRATEGY_2_FACTORS
+    
+    def calculate_all_factors(self, ticker: str, period: str = '2y') -> Dict:
+        """
+        计算单只ETF的所有因子(完整24因子)
+        
+        包含:
+        - 收益率因子
+        - 均值回归因子
+        - 动量/趋势因子
+        - 波动率因子
+        - 成交量因子
+        - 风险分布因子
+        - 日内因子
+        
+        Args:
+            ticker: ETF代码
+            period: 数据周期
+            
+        Returns:
+            Dict: 因子字典
+        """
+        factors = {'ticker': ticker}
+        
+        try:
+            # 数据获取
+            etf = yf.Ticker(ticker)
+            hist = etf.history(period=period)
+            info = etf.info
+            
+            if hist.empty:
+                return {'ticker': ticker, 'error': 'No data'}
+            
+            prices = hist['Close']
+            returns = prices.pct_change().dropna()
+            volumes = hist['Volume']
+            highs = hist['High']
+            lows = hist['Low']
+            opens = hist['Open']
+            
+            # ===== 1. 收益率因子 (4个) =====
+            # 1日收益率
+            if len(prices) >= 2:
+                factors['ret_1d'] = round(returns.iloc[-1] * 100, 2)
+            
+            # 5日收益率
+            if len(prices) >= 6:
+                factors['ret_5d'] = round((prices.iloc[-1] / prices.iloc[-6] - 1) * 100, 2)
+            
+            # 20日收益率
+            if len(prices) >= 21:
+                factors['ret_20d'] = round((prices.iloc[-1] / prices.iloc[-21] - 1) * 100, 2)
+            
+            # 60日收益率
+            if len(prices) >= 61:
+                factors['ret_60d'] = round((prices.iloc[-1] / prices.iloc[-61] - 1) * 100, 2)
+            
+            # ===== 2. 均值回归因子 (4个) =====
+            # 价格偏离均线
+            if len(prices) >= 10:
+                ma10 = prices.rolling(10).mean().iloc[-1]
+                factors['dist_ma10'] = round(prices.iloc[-1] - ma10, 2)
+            
+            if len(prices) >= 20:
+                ma20 = prices.rolling(20).mean().iloc[-1]
+                factors['dist_ma20'] = round(prices.iloc[-1] - ma20, 2)
+            
+            if len(prices) >= 60:
+                ma60 = prices.rolling(60).mean().iloc[-1]
+                factors['dist_ma60'] = round(prices.iloc[-1] - ma60, 2)
+            
+            # Z-score
+            if len(prices) >= 60:
+                mean60 = prices.rolling(60).mean().iloc[-1]
+                std60 = prices.rolling(60).std().iloc[-1]
+                if std60 > 0:
+                    factors['zscore_60'] = round((prices.iloc[-1] - mean60) / std60, 2)
+            
+            # ===== 3. 动量/趋势指标 (4个) =====
+            # ADX (简化版)
+            if len(prices) >= 14:
+                factors['adx'] = self._calculate_adx(prices, highs, lows)
+            
+            # RSI-14
+            if len(returns) >= 14:
+                factors['rsi_14'] = self._calculate_rsi(returns)
+            
+            # MACD
+            if len(prices) >= 26:
+                factors['macd'], factors['macd_hist'] = self._calculate_macd(prices)
+            
+            # CCI
+            if len(prices) >= 14:
+                factors['cci'] = self._calculate_cci(prices, highs, lows)
+            
+            # ===== 4. 波动率因子 (4个) =====
+            # 20日波动率
+            if len(returns) >= 20:
+                factors['vol_20'] = round(returns.tail(20).std() * np.sqrt(252) * 100, 2)
+                factors['volatility_1m'] = factors['vol_20']
+            
+            # ATR比率
+            if len(prices) >= 14:
+                factors['atr_ratio'] = self._calculate_atr_ratio(hist)
+            
+            # 布林带位置
+            if len(prices) >= 20:
+                factors['bb_pos'] = self._calculate_bb_position(prices)
+            
+            # GK波动率
+            if len(returns) >= 20:
+                factors['gk_vol_20'] = self._calculate_gk_volatility(returns)
+            
+            # ===== 5. 成交量/资金流 (3个) =====
+            # 成交量比
+            if len(volumes) >= 20:
+                avg_vol = volumes.tail(20).mean()
+                if avg_vol > 0:
+                    factors['vol_ratio'] = round(volumes.iloc[-1] / avg_vol, 2)
+                    factors['trading_volume'] = round(np.log(avg_vol + 1), 2)
+            
+            # MFI
+            if len(hist) >= 14:
+                factors['mfi'] = self._calculate_mfi(hist)
+            
+            # 换手率变化
+            if len(volumes) >= 60:
+                recent = volumes.tail(20).mean()
+                older = volumes.iloc[-60:-20].mean()
+                if older > 0:
+                    factors['turnover_change'] = round((recent / older - 1) * 100, 2)
+            
+            # ===== 6. 风险/分布因子 (2个) =====
+            # 偏度
+            if len(returns) >= 20:
+                factors['skew_20'] = round(returns.tail(20).skew(), 3)
+                factors['skewness'] = factors['skew_20']
+            
+            # 峰度
+            if len(returns) >= 20:
+                factors['kurt_20'] = round(returns.tail(20).kurtosis(), 3)
+                factors['kurtosis'] = factors['kurt_20']
+            
+            # ===== 7. 日内因子 (4个) =====
+            # 隔夜收益
+            if len(opens) >= 2:
+                factors['ret_overnight'] = round((opens.iloc[-1] / prices.iloc[-2] - 1) * 100, 3)
+            
+            # 日内收益
+            if len(prices) >= 1 and len(opens) >= 1:
+                factors['ret_intraday'] = round((prices.iloc[-1] / opens.iloc[-1] - 1) * 100, 3)
+            
+            # 上影线
+            if len(highs) >= 1 and len(opens) >= 1 and len(prices) >= 1:
+                factors['shadow_up'] = round((highs.iloc[-1] - max(opens.iloc[-1], prices.iloc[-1])) / prices.iloc[-1] * 100, 3)
+            
+            # 下影线
+            if len(lows) >= 1 and len(opens) >= 1 and len(prices) >= 1:
+                factors['shadow_down'] = round((min(opens.iloc[-1], prices.iloc[-1]) - lows.iloc[-1]) / prices.iloc[-1] * 100, 3)
+            
+            # ===== 8. 动量因子(兼容) =====
+            if 'ret_5d' in factors:
+                factors['momentum_1m'] = factors['ret_5d']
+            if 'ret_20d' in factors:
+                factors['momentum_3m'] = factors['ret_20d']
+            if 'ret_60d' in factors:
+                factors['momentum_6m'] = factors['ret_60d']
+            
+            # 动量加速度
+            if 'ret_5d' in factors and 'ret_20d' in factors:
+                factors['momentum_accel'] = round(factors['ret_5d'] - factors['ret_20d'], 2)
+            
+            # 绝对动量
+            if 'ret_20d' in factors:
+                factors['absolute_momentum'] = 1 if factors['ret_20d'] > 0 else 0
+            
+            # ===== 9. 基本面因子 =====
+            # 盈利收益率
+            if 'peRatio' in info and info['peRatio'] and info['peRatio'] > 0:
+                factors['earnings_yield'] = round(100 / info['peRatio'], 2)
+            else:
+                factors['earnings_yield'] = 0
+            
+            # ROE
+            if 'returnOnEquity' in info and info['returnOnEquity']:
+                factors['roe'] = round(info['returnOnEquity'] * 100, 2)
+            else:
+                factors['roe'] = 0
+            
+            # 净利率
+            if 'profitMargins' in info and info['profitMargins']:
+                factors['net_margin'] = round(info['profitMargins'] * 100, 2)
+            else:
+                factors['net_margin'] = 0
+            
+            # 盈利增长
+            if 'earningsGrowth' in info and info['earningsGrowth']:
+                factors['earnings_growth'] = round(info['earningsGrowth'] * 100, 2)
+            else:
+                factors['earnings_growth'] = 0
+            
+            # 市值
+            if 'totalAssets' in info and info['totalAssets']:
+                factors['size'] = round(np.log(info['totalAssets'] + 1), 2)
+            else:
+                factors['size'] = 0
+            
+            factors['success'] = True
+            
+        except Exception as e:
+            factors['error'] = str(e)
+        
+        return factors
+    
+    # ==================== 辅助计算函数 ====================
+    
+    def _calculate_adx(self, prices, highs, lows, period: int = 14) -> float:
+        """计算ADX (简化版)"""
+        try:
+            # 简化: 使用价格波动率作为趋势强度代理
+            if len(prices) < period:
+                return 0
+            
+            recent_vol = prices.tail(period).std()
+            older_vol = prices.iloc[:-period].std() if len(prices) > period * 2 else recent_vol
+            
+            if older_vol > 0:
+                return round((recent_vol / older_vol - 1) * 10 + 20, 1)
+            return 20
+        except:
+            return 20
+    
+    def _calculate_rsi(self, returns, period: int = 14) -> float:
+        """计算RSI"""
+        if len(returns) < period:
+            return 50
+        
+        gains = returns[returns > 0].sum()
+        losses = abs(returns[returns < 0].sum())
+        
+        if losses == 0:
+            return 100
+        
+        rs = gains / losses
+        rsi = 100 - (100 / (1 + rs))
+        return round(rsi, 1)
+    
+    def _calculate_macd(self, prices, fast: int = 12, slow: int = 26, signal: int = 9):
+        """计算MACD"""
+        try:
+            ema_fast = prices.ewm(span=fast).mean()
+            ema_slow = prices.ewm(span=slow).mean()
+            macd_line = ema_fast - ema_slow
+            signal_line = macd_line.ewm(span=signal).mean()
+            histogram = macd_line - signal_line
+            
+            return round(macd_line.iloc[-1], 2), round(histogram.iloc[-1], 2)
+        except:
+            return 0, 0
+    
+    def _calculate_cci(self, prices, highs, lows, period: int = 20):
+        """计算CCI"""
+        try:
+            if len(prices) < period:
+                return 0
+            
+            tp = (highs + lows + prices) / 3
+            sma = tp.rolling(period).mean()
+            mad = tp.rolling(period).apply(lambda x: np.abs(x - x.mean()).mean())
+            
+            cci = (tp.iloc[-1] - sma.iloc[-1]) / (0.015 * mad.iloc[-1])
+            return round(cci, 1)
+        except:
+            return 0
+    
+    def _calculate_atr_ratio(self, hist, period: int = 14):
+        """计算ATR比率"""
+        try:
+            high, low, close = hist['High'], hist['Low'], hist['Close']
+            tr1 = high - low
+            tr2 = abs(high - close.shift(1))
+            tr3 = abs(low - close.shift(1))
+            tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+            atr = tr.rolling(period).mean().iloc[-1]
+            
+            if close.iloc[-1] > 0:
+                return round(atr / close.iloc[-1] * 100, 2)
+            return 0
+        except:
+            return 0
+    
+    def _calculate_bb_position(self, prices, period: int = 20, num_std: float = 2):
+        """计算布林带位置"""
+        try:
+            sma = prices.rolling(period).mean().iloc[-1]
+            std = prices.rolling(period).std().iloc[-1]
+            upper = sma + num_std * std
+            lower = sma - num_std * std
+            
+            if upper != lower:
+                pos = (prices.iloc[-1] - lower) / (upper - lower)
+                return round(pos, 3)
+            return 0.5
+        except:
+            return 0.5
+    
+    def _calculate_gk_volatility(self, returns, lookback: int = 20):
+        """计算Garman-Klass波动率"""
+        try:
+            if len(returns) < lookback:
+                return 0
+            
+            # 简化的GK波动率
+            return round(returns.tail(lookback).std() * np.sqrt(252) * 100, 2)
+        except:
+            return 0
+    
+    def _calculate_mfi(self, hist, period: int = 14):
+        """计算MFI"""
+        try:
+            tp = (hist['High'] + hist['Low'] + hist['Close']) / 3
+            mf = tp * hist['Volume']
+            
+            positive_flow = mf.where(tp > tp.shift(1), 0).rolling(period).sum()
+            negative_flow = mf.where(tp < tp.shift(1), 0).rolling(period).sum()
+            
+            if negative_flow.iloc[-1] == 0:
+                return 100
+            
+            mr = positive_flow.iloc[-1] / negative_flow.iloc[-1]
+            mfi = 100 - (100 / (1 + mr))
+            return round(mfi, 1)
+        except:
+            return 50
+    
+    # ==================== 策略计算 ====================
+    
+    def calculate_strategy_score(self, factor_data: Dict) -> Dict:
+        """
+        计算指定策略的综合得分
+        
+        Args:
+            factor_data: 因子数据字典
+            
+        Returns:
+            Dict: 包含各类因子得分和综合得分的字典
+        """
+        scores = {}
+        total_weight = 0
+        
+        for factor_group, config in self.factor_config.items():
+            group_score = 0
+            valid_count = 0
+            
+            for factor in config['factors']:
+                if factor in factor_data and factor_data[factor] is not None:
+                    value = factor_data[factor]
+                    
+                    # 特殊处理某些因子(反向或特殊逻辑)
+                    if factor in ['vol_20', 'volatility_1m', 'kurt_20']:
+                        # 波动率和峰度: 越低越好(反向)
+                        # 归一化到0-1
+                        group_score += max(0, 1 - abs(value) / 100)
+                    elif factor == 'skew_20':
+                        # 负偏度是风险信号
+                        group_score += max(0, 1 - abs(min(0, value)) / 5)
+                    elif factor in ['dist_ma10', 'dist_ma20', 'dist_ma60']:
+                        # 偏离度: 绝对值越小越好
+                        group_score += max(0, 1 - abs(value) / (factor_data.get('price', 100) or 100))
+                    else:
+                        # 其他因子: 直接使用
+                        group_score += value
+                    
+                    valid_count += 1
+            
+            if valid_count > 0:
+                group_score = group_score / valid_count
+                # 标准化
+                if factor_group in ['volatility', 'risk']:
+                    # 反向因子
+                    scores[factor_group] = round(group_score * config['weight'] * 0.5, 4)
+                else:
+                    scores[factor_group] = round((group_score + 50) * config['weight'], 4)
+            else:
+                scores[factor_group] = 0
+            
+            total_weight += config['weight']
+        
+        # 综合得分
+        composite = sum(scores.values()) / total_weight if total_weight > 0 else 0
+        
+        return {
+            'strategy': self.strategy,
+            'factor_scores': scores,
+            'composite_score': round(composite, 2),
+            'config': {k: v['description'] for k, v in self.factor_config.items()}
+        }
+    
+    def check_risk_signals(self, factor_data: Dict) -> Dict:
+        """
+        检查风险信号
+        
+        Returns:
+            Dict: 包含风险等级和具体信号
+        """
+        signals = []
+        risk_level = 'LOW'
+        
+        # 极端风险检查 (策略二)
+        if self.strategy == 2:
+            if factor_data.get('kurt_20', 0) > 3:
+                signals.append('极端波动 (kurt_20>3)')
+                risk_level = 'HIGH'
+            
+            if factor_data.get('skew_20', 0) < 0:
+                signals.append('负偏度预警 (skew<0)')
+                if risk_level != 'HIGH':
+                    risk_level = 'MEDIUM'
+        
+        # 超买超卖
+        if factor_data.get('rsi_14', 50) > 70:
+            signals.append('RSI超买 (>70)')
+        elif factor_data.get('rsi_14', 50) < 30:
+            signals.append('RSI超卖 (<30)')
+        
+        # 布林带极端位置
+        bb = factor_data.get('bb_pos', 0.5)
+        if bb > 0.9:
+            signals.append('布林带上轨')
+        elif bb < 0.1:
+            signals.append('布林带下轨')
+        
+        return {
+            'risk_level': risk_level,
+            'signals': signals,
+            'recommendation': 'REDUCE' if risk_level == 'HIGH' else ('CAUTION' if risk_level == 'MEDIUM' else 'OK')
+        }
+    
+    def get_recommended_factors(self) -> List[str]:
+        """获取当前策略的所有因子列表"""
+        factors = []
+        for config in self.factor_config.values():
+            factors.extend(config['factors'])
+        return list(set(factors))
+
+
+def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.DataFrame:
+    """
+    计算多只ETF的策略得分
+    
+    Args:
+        tickers: ETF代码列表
+        strategy: 1 或 2
+        
+    Returns:
+        DataFrame: 包含因子和得分的矩阵
+    """
+    import time
+    
+    model = DualStrategyModel(strategy=strategy)
+    results = []
+    
+    for ticker in tickers:
+        print(f"  计算 {ticker}...")
+        factors = model.calculate_all_factors(ticker)
+        
+        if factors.get('success'):
+            score_result = model.calculate_strategy_score(factors)
+            risk_result = model.check_risk_signals(factors)
+            
+            row = {
+                'ticker': ticker,
+                'composite_score': score_result['composite_score'],
+                'risk_level': risk_result['risk_level'],
+                'recommendation': risk_result['recommendation']
+            }
+            
+            # 添加因子值
+            for factor in model.get_recommended_factors():
+                row[factor] = factors.get(factor, 0)
+            
+            results.append(row)
+        
+        time.sleep(0.2)
+    
+    df = pd.DataFrame(results)
+    return df.sort_values('composite_score', ascending=False)
+
+
+# ===== 测试 =====
+if __name__ == '__main__':
+    # 测试策略一
+    print("="*60)
+    print("策略一: 长期动量策略")
+    print("="*60)
+    
+    model1 = DualStrategyModel(strategy=1)
+    print(f"因子配置: {model1.factor_config.keys()}")
+    
+    # 测试单只ETF
+    factors = model1.calculate_all_factors('XLK')
+    print(f"\nXLK因子示例: ret_20d={factors.get('ret_20d')}, rsi_14={factors.get('rsi_14')}")
+    
+    score1 = model1.calculate_strategy_score(factors)
+    print(f"综合得分: {score1['composite_score']}")
+    
+    # 测试策略二
+    print("\n" + "="*60)
+    print("策略二: 短期机会策略")
+    print("="*60)
+    
+    model2 = DualStrategyModel(strategy=2)
+    score2 = model2.calculate_strategy_score(factors)
+    print(f"综合得分: {score2['composite_score']}")
+    
+    risk = model2.check_risk_signals(factors)
+    print(f"风险信号: {risk}")

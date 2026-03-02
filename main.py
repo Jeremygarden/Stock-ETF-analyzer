@@ -1,8 +1,8 @@
 """
-ETF轮动系统主程序 (v2.0)
+ETF轮动系统主程序 (v2.1)
 - 基础轮动模式
 - 高级多因子模式
-- 回测模式
+- 回测模式 (含高级指标)
 """
 
 import os
@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from etf_data import ETFDataFetcher
 from advanced_rotator import AdvancedETFRotator
 from backtest import ETFBacktester
+from backtest_metrics import AdvancedBacktestMetrics, print_advanced_report
 from notifier import SignalNotifier
 from config import ETF_CONFIG
 
@@ -85,6 +86,62 @@ def run_backtest(etf_pool=None, strategy='advanced'):
     return results
 
 
+def run_advanced_backtest(strategy='dual_momentum'):
+    """运行高级回测 (含防止过拟合指标)"""
+    import pandas as pd
+    from config import ETF_CONFIG
+    all_etfs = {}
+    all_etfs.update(ETF_CONFIG['sector_etfs'])
+    all_etfs.update(ETF_CONFIG['emerging_etfs'])
+    all_etfs.update(ETF_CONFIG['option_income_etfs'])
+    etf_pool = list(all_etfs.keys())
+    
+    print(f"\n{'='*60}")
+    print(f"高级回测分析 (防止过拟合)")
+    print(f"{'='*60}")
+    print(f"策略: {strategy}")
+    print(f"ETF池: {len(etf_pool)}个\n")
+    
+    # 运行基础回测获取收益序列
+    backtester = ETFBacktester(initial_capital=100000)
+    result = backtester.run_backtest(
+        etf_pool,
+        strategy=strategy,
+        start_date=datetime(2023, 1, 1),
+        end_date=datetime.now()
+    )
+    
+    if 'error' in result:
+        print(f"回测错误: {result['error']}")
+        return
+    
+    # 获取月度收益序列
+    returns = pd.Series(result.get('monthly_returns', {}))
+    if returns.empty:
+        print("无收益数据")
+        return
+    
+    # 转换为合适格式
+    returns = returns / 100  # 转为小数
+    
+    # 高级指标分析
+    analyzer = AdvancedBacktestMetrics()
+    report = analyzer.generate_report(returns)
+    
+    # 打印报告
+    print_advanced_report(report)
+    
+    # 保存报告
+    output_dir = os.path.join(os.path.dirname(__file__), 'output')
+    os.makedirs(output_dir, exist_ok=True)
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    with open(f'{output_dir}/advanced_backtest_{timestamp}.json', 'w') as f:
+        json.dump(report, f, indent=2, default=str)
+    
+    print(f"\n✅ 高级回测报告已保存")
+
+
 def save_results(data, prefix='signals'):
     """保存结果到文件"""
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
@@ -103,9 +160,9 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='ETF轮动系统')
-    parser.add_argument('--mode', choices=['rotation', 'backtest', 'both'], 
+    parser.add_argument('--mode', choices=['rotation', 'backtest', 'backtest-advanced', 'both'], 
                        default='rotation', help='运行模式')
-    parser.add_argument('--strategy', default='advanced', 
+    parser.add_argument('--strategy', default='dual_momentum', 
                        help='回测策略 (momentum/dual_momentum/risk_parity/advanced)')
     
     args = parser.parse_args()
@@ -113,8 +170,11 @@ def main():
     if args.mode in ['rotation', 'both']:
         run_rotation()
     
-    if args.mode in ['backtest', 'both']:
+    if args.mode == 'backtest':
         run_backtest(strategy=args.strategy)
+    
+    if args.mode == 'backtest-advanced':
+        run_advanced_backtest(strategy=args.strategy)
 
 
 if __name__ == '__main__':

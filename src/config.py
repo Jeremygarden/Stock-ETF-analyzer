@@ -1,6 +1,7 @@
 """
 ETF轮动系统配置文件
 """
+import os
 
 # ETF池配置
 ETF_CONFIG = {

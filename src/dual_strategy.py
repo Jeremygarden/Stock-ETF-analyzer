@@ -17,6 +17,13 @@ from typing import Dict, List, Optional
 import yfinance as yf
 from datetime import datetime
 
+# 基本面穿透模块
+try:
+    from etf_fundamentals import get_fundamental_factors
+    HAS_FUNDAMENTALS = True
+except ImportError:
+    HAS_FUNDAMENTALS = False
+
 
 class DualStrategyModel:
     """
@@ -292,30 +299,35 @@ class DualStrategyModel:
             # CSMOM排名稍后计算 (需要全部ETF数据)
             factors['csmom_rank'] = 0  # 临时值，后续批量计算
             
-            # ===== 9. 基本面因子 =====
-            # 盈利收益率
-            if 'peRatio' in info and info['peRatio'] and info['peRatio'] > 0:
-                factors['earnings_yield'] = round(100 / info['peRatio'], 2)
+            # ===== 9. 基本面因子 (穿透持仓计算) =====
+            # 优先使用etf_fundamentals模块的缓存数据
+            if HAS_FUNDAMENTALS:
+                fund_factors = get_fundamental_factors(ticker)
+                factors['earnings_yield'] = fund_factors.get('earnings_yield', 0)
+                factors['roe'] = fund_factors.get('roe', 0)
+                factors['net_margin'] = fund_factors.get('net_margin', 0)
+                factors['earnings_growth'] = fund_factors.get('earnings_growth', 0)
             else:
-                factors['earnings_yield'] = 0
-            
-            # ROE
-            if 'returnOnEquity' in info and info['returnOnEquity']:
-                factors['roe'] = round(info['returnOnEquity'] * 100, 2)
-            else:
-                factors['roe'] = 0
-            
-            # 净利率
-            if 'profitMargins' in info and info['profitMargins']:
-                factors['net_margin'] = round(info['profitMargins'] * 100, 2)
-            else:
-                factors['net_margin'] = 0
-            
-            # 盈利增长
-            if 'earningsGrowth' in info and info['earningsGrowth']:
-                factors['earnings_growth'] = round(info['earningsGrowth'] * 100, 2)
-            else:
-                factors['earnings_growth'] = 0
+                # 降级: 尝试从yfinance info获取
+                if 'peRatio' in info and info['peRatio'] and info['peRatio'] > 0:
+                    factors['earnings_yield'] = round(100 / info['peRatio'], 2)
+                else:
+                    factors['earnings_yield'] = 0
+                
+                if 'returnOnEquity' in info and info['returnOnEquity']:
+                    factors['roe'] = round(info['returnOnEquity'] * 100, 2)
+                else:
+                    factors['roe'] = 0
+                
+                if 'profitMargins' in info and info['profitMargins']:
+                    factors['net_margin'] = round(info['profitMargins'] * 100, 2)
+                else:
+                    factors['net_margin'] = 0
+                
+                if 'earningsGrowth' in info and info['earningsGrowth']:
+                    factors['earnings_growth'] = round(info['earningsGrowth'] * 100, 2)
+                else:
+                    factors['earnings_growth'] = 0
             
             # 市值
             if 'totalAssets' in info and info['totalAssets']:

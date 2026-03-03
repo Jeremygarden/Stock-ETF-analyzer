@@ -1,0 +1,2298 @@
+{
+  "XLK": {
+    "ticker": "XLK",
+    "updated_at": "2026-03-03T10:06:37.979162",
+    "source": "yfinance",
+    "pe_ratio": 36.4,
+    "earnings_yield": 2.75,
+    "pb_ratio": 9.82,
+    "ps_ratio": 7.96,
+    "pcf_ratio": 26.08,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 15.3,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "weight": 12.63,
+        "roe": 152.02,
+        "earnings_growth": 18.3,
+        "net_margin": 27.04,
+        "pe": 33.55
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 10.54,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 5.15,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      },
+      {
+        "symbol": "MU",
+        "name": "Micron Technology Inc",
+        "weight": 4.0,
+        "roe": 22.55,
+        "earnings_growth": 175.4,
+        "net_margin": 28.15,
+        "pe": 39.23
+      },
+      {
+        "symbol": "AMD",
+        "name": "Advanced Micro Devices Inc",
+        "weight": 3.31,
+        "roe": 7.08,
+        "earnings_growth": 217.1,
+        "net_margin": 12.52,
+        "pe": 76.39
+      },
+      {
+        "symbol": "PLTR",
+        "name": "Palantir Technologies Inc Ordinary Shares - Class A",
+        "weight": 2.88,
+        "roe": 25.98,
+        "earnings_growth": 647.6,
+        "net_margin": 36.31,
+        "pe": 234.15
+      },
+      {
+        "symbol": "CSCO",
+        "name": "Cisco Systems Inc",
+        "weight": 2.65,
+        "roe": 23.75,
+        "earnings_growth": 31.2,
+        "net_margin": 18.76,
+        "pe": 28.57
+      },
+      {
+        "symbol": "LRCX",
+        "name": "Lam Research Corp",
+        "weight": 2.52,
+        "roe": 65.56,
+        "earnings_growth": 37.0,
+        "net_margin": 30.22,
+        "pe": 47.43
+      },
+      {
+        "symbol": "IBM",
+        "name": "International Business Machines Corp",
+        "weight": 2.46,
+        "roe": 35.16,
+        "earnings_growth": 89.9,
+        "net_margin": 15.69,
+        "pe": 21.51
+      }
+    ],
+    "holdings_coverage": 61.5,
+    "weighted_roe": 73.2,
+    "weighted_earnings_growth": 113.53,
+    "weighted_net_margin": 36.02,
+    "sector_weightings": {
+      "technology": 0.989,
+      "communication_services": 0.011
+    },
+    "success": true
+  },
+  "XLV": {
+    "ticker": "XLV",
+    "updated_at": "2026-03-03T10:06:44.698544",
+    "source": "yfinance",
+    "pe_ratio": 26.67,
+    "earnings_yield": 3.75,
+    "pb_ratio": 4.4,
+    "ps_ratio": 1.59,
+    "pcf_ratio": 18.59,
+    "top_holdings": [
+      {
+        "symbol": "LLY",
+        "name": "Eli Lilly and Co",
+        "weight": 14.68,
+        "roe": 101.16,
+        "earnings_growth": 51.4,
+        "net_margin": 31.67,
+        "pe": 44.45
+      },
+      {
+        "symbol": "JNJ",
+        "name": "Johnson & Johnson",
+        "weight": 9.76,
+        "roe": 35.03,
+        "earnings_growth": 48.6,
+        "net_margin": 28.46,
+        "pe": 22.51
+      },
+      {
+        "symbol": "ABBV",
+        "name": "AbbVie Inc",
+        "weight": 7.03,
+        "roe": 6225.0,
+        "net_margin": 6.91,
+        "pe": 98.84
+      },
+      {
+        "symbol": "MRK",
+        "name": "Merck & Co Inc",
+        "weight": 4.88,
+        "roe": 36.88,
+        "earnings_growth": -19.3,
+        "net_margin": 28.08,
+        "pe": 16.68
+      },
+      {
+        "symbol": "UNH",
+        "name": "UnitedHealth Group Inc",
+        "weight": 4.63,
+        "roe": 12.54,
+        "earnings_growth": -99.9,
+        "net_margin": 2.69,
+        "pe": 22.28
+      },
+      {
+        "symbol": "TMO",
+        "name": "Thermo Fisher Scientific Inc",
+        "weight": 3.87,
+        "roe": 13.02,
+        "earnings_growth": 9.3,
+        "net_margin": 15.05,
+        "pe": 28.65
+      },
+      {
+        "symbol": "ABT",
+        "name": "Abbott Laboratories",
+        "weight": 3.39,
+        "roe": 12.96,
+        "earnings_growth": -80.9,
+        "net_margin": 14.72,
+        "pe": 30.68
+      },
+      {
+        "symbol": "AMGN",
+        "name": "Amgen Inc",
+        "weight": 3.28,
+        "roe": 106.1,
+        "earnings_growth": 112.1,
+        "net_margin": 20.98,
+        "pe": 27.1
+      },
+      {
+        "symbol": "ISRG",
+        "name": "Intuitive Surgical Inc",
+        "weight": 3.19,
+        "roe": 16.69,
+        "earnings_growth": 16.6,
+        "net_margin": 28.38,
+        "pe": 62.9
+      },
+      {
+        "symbol": "GILD",
+        "name": "Gilead Sciences Inc",
+        "weight": 3.14,
+        "roe": 40.66,
+        "earnings_growth": 23.4,
+        "net_margin": 28.9,
+        "pe": 22.13
+      }
+    ],
+    "holdings_coverage": 57.8,
+    "weighted_roe": 802.51,
+    "weighted_earnings_growth": 16.04,
+    "weighted_net_margin": 22.45,
+    "sector_weightings": {
+      "healthcare": 1.0
+    },
+    "success": true
+  },
+  "XLF": {
+    "ticker": "XLF",
+    "updated_at": "2026-03-03T10:06:50.623742",
+    "source": "yfinance",
+    "pe_ratio": 17.99,
+    "earnings_yield": 5.56,
+    "pb_ratio": 2.33,
+    "ps_ratio": 3.51,
+    "pcf_ratio": 0,
+    "top_holdings": [
+      {
+        "symbol": "BRK-B",
+        "name": "Berkshire Hathaway Inc Class B",
+        "weight": 11.51,
+        "roe": 9.81,
+        "earnings_growth": -2.5,
+        "net_margin": 18.03,
+        "pe": 15.36
+      },
+      {
+        "symbol": "JPM",
+        "name": "JPMorgan Chase & Co",
+        "weight": 10.87,
+        "roe": 16.13,
+        "earnings_growth": -3.6,
+        "net_margin": 33.91,
+        "pe": 14.86
+      },
+      {
+        "symbol": "V",
+        "name": "Visa Inc Class A",
+        "weight": 7.09,
+        "roe": 53.95,
+        "earnings_growth": 17.4,
+        "net_margin": 50.23,
+        "pe": 30.12
+      },
+      {
+        "symbol": "MA",
+        "name": "Mastercard Inc Class A",
+        "weight": 5.77,
+        "roe": 209.91,
+        "earnings_growth": 24.2,
+        "net_margin": 45.65,
+        "pe": 31.54
+      },
+      {
+        "symbol": "BAC",
+        "name": "Bank of America Corp",
+        "weight": 4.67,
+        "roe": 10.22,
+        "earnings_growth": 21.2,
+        "net_margin": 28.4,
+        "pe": 13.07
+      },
+      {
+        "symbol": "WFC",
+        "name": "Wells Fargo & Co",
+        "weight": 3.71,
+        "roe": 11.73,
+        "earnings_growth": 13.1,
+        "net_margin": 26.66,
+        "pe": 13.19
+      },
+      {
+        "symbol": "GS",
+        "name": "The Goldman Sachs Group Inc",
+        "weight": 3.66,
+        "roe": 13.86,
+        "earnings_growth": 17.3,
+        "net_margin": 28.92,
+        "pe": 16.78
+      },
+      {
+        "symbol": "MS",
+        "name": "Morgan Stanley",
+        "weight": 2.88,
+        "roe": 15.61,
+        "earnings_growth": 20.7,
+        "net_margin": 23.99,
+        "pe": 16.37
+      },
+      {
+        "symbol": "C",
+        "name": "Citigroup Inc",
+        "weight": 2.7,
+        "roe": 6.83,
+        "earnings_growth": -10.8,
+        "net_margin": 18.89,
+        "pe": 15.94
+      },
+      {
+        "symbol": "AXP",
+        "name": "American Express Co",
+        "weight": 2.47,
+        "roe": 33.99,
+        "earnings_growth": 16.6,
+        "net_margin": 16.17,
+        "pe": 20.0
+      }
+    ],
+    "holdings_coverage": 55.3,
+    "weighted_roe": 39.24,
+    "weighted_earnings_growth": 8.63,
+    "weighted_net_margin": 30.6,
+    "sector_weightings": {
+      "technology": 0.0171,
+      "financial_services": 0.9807,
+      "industrials": 0.0022
+    },
+    "success": true
+  },
+  "XLY": {
+    "ticker": "XLY",
+    "updated_at": "2026-03-03T10:06:56.580056",
+    "source": "yfinance",
+    "pe_ratio": 31.49,
+    "earnings_yield": 3.18,
+    "pb_ratio": 7.02,
+    "ps_ratio": 2.8,
+    "pcf_ratio": 18.13,
+    "top_holdings": [
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc",
+        "weight": 23.42,
+        "roe": 22.29,
+        "earnings_growth": 5.0,
+        "net_margin": 10.83,
+        "pe": 29.06
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "weight": 19.55,
+        "roe": 4.93,
+        "earnings_growth": -60.6,
+        "net_margin": 4.0,
+        "pe": 370.02
+      },
+      {
+        "symbol": "HD",
+        "name": "The Home Depot Inc",
+        "weight": 6.03,
+        "roe": 145.54,
+        "earnings_growth": -14.5,
+        "net_margin": 8.6,
+        "pe": 26.04
+      },
+      {
+        "symbol": "MCD",
+        "name": "McDonald's Corp",
+        "weight": 4.5,
+        "earnings_growth": 8.2,
+        "net_margin": 31.85,
+        "pe": 28.02
+      },
+      {
+        "symbol": "TJX",
+        "name": "TJX Companies Inc",
+        "weight": 3.77,
+        "roe": 59.13,
+        "earnings_growth": 28.3,
+        "net_margin": 9.1,
+        "pe": 35.31
+      },
+      {
+        "symbol": "BKNG",
+        "name": "Booking Holdings Inc",
+        "weight": 3.64,
+        "earnings_growth": 38.4,
+        "net_margin": 20.08,
+        "pe": 25.25
+      },
+      {
+        "symbol": "LOW",
+        "name": "Lowe's Companies Inc",
+        "weight": 3.39,
+        "earnings_growth": -10.8,
+        "net_margin": 7.71,
+        "pe": 21.27
+      },
+      {
+        "symbol": "SBUX",
+        "name": "Starbucks Corp",
+        "weight": 2.36,
+        "earnings_growth": -62.5,
+        "net_margin": 3.63,
+        "pe": 80.63
+      },
+      {
+        "symbol": "ORLY",
+        "name": "O'Reilly Automotive Inc",
+        "weight": 1.88,
+        "earnings_growth": 13.9,
+        "net_margin": 14.27,
+        "pe": 32.0
+      },
+      {
+        "symbol": "RCL",
+        "name": "Royal Caribbean Group",
+        "weight": 1.86,
+        "roe": 47.73,
+        "earnings_growth": 37.1,
+        "net_margin": 23.8,
+        "pe": 19.27
+      }
+    ],
+    "holdings_coverage": 70.4,
+    "weighted_roe": 25.67,
+    "weighted_earnings_growth": -13.65,
+    "weighted_net_margin": 10.52,
+    "sector_weightings": {
+      "consumer_cyclical": 0.9907,
+      "technology": 0.0075,
+      "industrials": 0.0019
+    },
+    "success": true
+  },
+  "XLE": {
+    "ticker": "XLE",
+    "updated_at": "2026-03-03T10:07:02.477677",
+    "source": "yfinance",
+    "pe_ratio": 20.37,
+    "earnings_yield": 4.91,
+    "pb_ratio": 2.22,
+    "ps_ratio": 1.5,
+    "pcf_ratio": 9.07,
+    "top_holdings": [
+      {
+        "symbol": "XOM",
+        "name": "Exxon Mobil Corp",
+        "weight": 24.4,
+        "roe": 11.08,
+        "earnings_growth": -11.0,
+        "net_margin": 8.9,
+        "pe": 23.05
+      },
+      {
+        "symbol": "CVX",
+        "name": "Chevron Corp",
+        "weight": 17.9,
+        "roe": 7.23,
+        "earnings_growth": -23.8,
+        "net_margin": 6.66,
+        "pe": 28.55
+      },
+      {
+        "symbol": "COP",
+        "name": "ConocoPhillips",
+        "weight": 6.88,
+        "roe": 12.36,
+        "earnings_growth": -39.0,
+        "net_margin": 13.25,
+        "pe": 18.62
+      },
+      {
+        "symbol": "SLB",
+        "name": "SLB Ltd",
+        "weight": 4.51,
+        "roe": 13.9,
+        "earnings_growth": -28.6,
+        "net_margin": 9.45,
+        "pe": 21.82
+      },
+      {
+        "symbol": "WMB",
+        "name": "Williams Companies Inc",
+        "weight": 4.49,
+        "roe": 18.55,
+        "earnings_growth": 50.8,
+        "net_margin": 22.13,
+        "pe": 35.64
+      },
+      {
+        "symbol": "EOG",
+        "name": "EOG Resources Inc",
+        "weight": 3.8,
+        "roe": 16.83,
+        "earnings_growth": -41.7,
+        "net_margin": 21.98,
+        "pe": 14.11
+      },
+      {
+        "symbol": "KMI",
+        "name": "Kinder Morgan Inc Class P",
+        "weight": 3.73,
+        "roe": 9.83,
+        "earnings_growth": 49.3,
+        "net_margin": 18.04,
+        "pe": 24.74
+      },
+      {
+        "symbol": "PSX",
+        "name": "Phillips 66",
+        "weight": 3.61,
+        "roe": 15.43,
+        "earnings_growth": 242728.4,
+        "net_margin": 3.33,
+        "pe": 14.83
+      },
+      {
+        "symbol": "VLO",
+        "name": "Valero Energy Corp",
+        "weight": 3.46,
+        "roe": 8.3,
+        "earnings_growth": 317.9,
+        "net_margin": 2.02,
+        "pe": 28.43
+      },
+      {
+        "symbol": "BKR",
+        "name": "Baker Hughes Co Class A",
+        "weight": 3.45,
+        "roe": 14.55,
+        "earnings_growth": -25.6,
+        "net_margin": 9.33,
+        "pe": 24.93
+      }
+    ],
+    "holdings_coverage": 76.2,
+    "weighted_roe": 11.36,
+    "weighted_earnings_growth": 11503.12,
+    "weighted_net_margin": 10.12,
+    "sector_weightings": {
+      "energy": 1.0
+    },
+    "success": true
+  },
+  "XLI": {
+    "ticker": "XLI",
+    "updated_at": "2026-03-03T10:07:08.303403",
+    "source": "yfinance",
+    "pe_ratio": 30.54,
+    "earnings_yield": 3.27,
+    "pb_ratio": 6.69,
+    "ps_ratio": 3.12,
+    "pcf_ratio": 22.01,
+    "top_holdings": [
+      {
+        "symbol": "GE",
+        "name": "GE Aerospace",
+        "weight": 6.36,
+        "roe": 44.69,
+        "earnings_growth": 37.4,
+        "net_margin": 18.98,
+        "pe": 42.9
+      },
+      {
+        "symbol": "CAT",
+        "name": "Caterpillar Inc",
+        "weight": 6.05,
+        "roe": 43.53,
+        "earnings_growth": -11.4,
+        "net_margin": 13.14,
+        "pe": 40.0
+      },
+      {
+        "symbol": "RTX",
+        "name": "RTX Corp",
+        "weight": 5.29,
+        "roe": 10.95,
+        "earnings_growth": 8.3,
+        "net_margin": 7.6,
+        "pe": 42.77
+      },
+      {
+        "symbol": "GEV",
+        "name": "GE Vernova Inc",
+        "weight": 3.87,
+        "roe": 42.64,
+        "earnings_growth": 671.7,
+        "net_margin": 12.83,
+        "pe": 49.76
+      },
+      {
+        "symbol": "BA",
+        "name": "Boeing Co",
+        "weight": 3.6,
+        "roe": 290.08,
+        "net_margin": 2.5,
+        "pe": 92.64
+      },
+      {
+        "symbol": "UBER",
+        "name": "Uber Technologies Inc",
+        "weight": 3.27,
+        "roe": 39.93,
+        "earnings_growth": -95.6,
+        "net_margin": 19.33,
+        "pe": 16.06
+      },
+      {
+        "symbol": "HON",
+        "name": "Honeywell International Inc",
+        "weight": 2.84,
+        "roe": 26.14,
+        "earnings_growth": -76.4,
+        "net_margin": 12.63,
+        "pe": 32.77
+      },
+      {
+        "symbol": "UNP",
+        "name": "Union Pacific Corp",
+        "weight": 2.74,
+        "roe": 40.38,
+        "earnings_growth": 6.8,
+        "net_margin": 29.12,
+        "pe": 22.27
+      },
+      {
+        "symbol": "ETN",
+        "name": "Eaton Corp PLC",
+        "weight": 2.68,
+        "roe": 21.53,
+        "earnings_growth": 18.9,
+        "net_margin": 14.89,
+        "pe": 36.11
+      },
+      {
+        "symbol": "DE",
+        "name": "Deere & Co",
+        "weight": 2.61,
+        "roe": 19.57,
+        "earnings_growth": -24.1,
+        "net_margin": 10.3,
+        "pe": 34.14
+      }
+    ],
+    "holdings_coverage": 39.3,
+    "weighted_roe": 56.93,
+    "weighted_earnings_growth": 58.3,
+    "weighted_net_margin": 13.86,
+    "sector_weightings": {
+      "consumer_cyclical": 0.0037,
+      "technology": 0.075,
+      "industrials": 0.9214
+    },
+    "success": true
+  },
+  "XLB": {
+    "ticker": "XLB",
+    "updated_at": "2026-03-03T10:07:14.006186",
+    "source": "yfinance",
+    "pe_ratio": 25.0,
+    "earnings_yield": 4.0,
+    "pb_ratio": 2.7,
+    "ps_ratio": 1.96,
+    "pcf_ratio": 15.21,
+    "top_holdings": [
+      {
+        "symbol": "LIN",
+        "name": "Linde PLC",
+        "weight": 13.61,
+        "roe": 17.82,
+        "earnings_growth": -9.4,
+        "net_margin": 20.3,
+        "pe": 34.84
+      },
+      {
+        "symbol": "NEM",
+        "name": "Newmont Corp",
+        "weight": 7.82,
+        "roe": 22.34,
+        "earnings_growth": -4.6,
+        "net_margin": 31.25,
+        "pe": 20.15
+      },
+      {
+        "symbol": "FCX",
+        "name": "Freeport-McMoRan Inc",
+        "weight": 5.52,
+        "roe": 13.95,
+        "earnings_growth": 47.7,
+        "net_margin": 8.51,
+        "pe": 44.93
+      },
+      {
+        "symbol": "CRH",
+        "name": "CRH PLC",
+        "weight": 5.23,
+        "roe": 15.68,
+        "earnings_growth": 48.4,
+        "net_margin": 10.02,
+        "pe": 21.36
+      },
+      {
+        "symbol": "SHW",
+        "name": "Sherwin-Williams Co",
+        "weight": 5.21,
+        "roe": 59.39,
+        "earnings_growth": 1.4,
+        "net_margin": 10.9,
+        "pe": 34.71
+      },
+      {
+        "symbol": "APD",
+        "name": "Air Products and Chemicals Inc",
+        "weight": 4.63,
+        "roe": -1.67,
+        "earnings_growth": 9.7,
+        "net_margin": -2.73
+      },
+      {
+        "symbol": "ECL",
+        "name": "Ecolab Inc",
+        "weight": 4.58,
+        "roe": 22.52,
+        "net_margin": 12.91,
+        "pe": 41.68
+      },
+      {
+        "symbol": "CTVA",
+        "name": "Corteva Inc",
+        "weight": 4.5,
+        "roe": 4.97,
+        "net_margin": 6.29,
+        "pe": 46.01
+      },
+      {
+        "symbol": "NUE",
+        "name": "Nucor Corp",
+        "weight": 4.35,
+        "roe": 9.36,
+        "earnings_growth": 34.2,
+        "net_margin": 5.37,
+        "pe": 24.04
+      },
+      {
+        "symbol": "MLM",
+        "name": "Martin Marietta Materials Inc",
+        "weight": 4.2,
+        "roe": 10.16,
+        "earnings_growth": -4.1,
+        "net_margin": 18.49,
+        "pe": 40.64
+      }
+    ],
+    "holdings_coverage": 59.7,
+    "weighted_roe": 18.22,
+    "weighted_earnings_growth": 8.99,
+    "weighted_net_margin": 14.29,
+    "sector_weightings": {
+      "consumer_cyclical": 0.1481,
+      "basic_materials": 0.8519
+    },
+    "success": true
+  },
+  "XLRE": {
+    "ticker": "XLRE",
+    "updated_at": "2026-03-03T10:07:20.141376",
+    "source": "yfinance",
+    "pe_ratio": 33.07,
+    "earnings_yield": 3.02,
+    "pb_ratio": 2.63,
+    "ps_ratio": 5.93,
+    "pcf_ratio": 17.29,
+    "top_holdings": [
+      {
+        "symbol": "WELL",
+        "name": "Welltower Inc",
+        "weight": 9.91,
+        "roe": 2.54,
+        "earnings_growth": -26.3,
+        "net_margin": 8.64,
+        "pe": 146.97
+      },
+      {
+        "symbol": "PLD",
+        "name": "Prologis Inc",
+        "weight": 9.3,
+        "roe": 6.13,
+        "earnings_growth": 6.3,
+        "net_margin": 36.21,
+        "pe": 40.2
+      },
+      {
+        "symbol": "AMT",
+        "name": "American Tower Corp",
+        "weight": 6.43,
+        "roe": 26.28,
+        "earnings_growth": -33.2,
+        "net_margin": 23.76,
+        "pe": 30.29
+      },
+      {
+        "symbol": "EQIX",
+        "name": "Equinix Inc",
+        "weight": 6.18,
+        "roe": 9.72,
+        "net_margin": 14.58,
+        "pe": 70.42
+      },
+      {
+        "symbol": "SPG",
+        "name": "Simon Property Group Inc",
+        "weight": 4.79,
+        "roe": 104.11,
+        "earnings_growth": 358.1,
+        "net_margin": 72.71,
+        "pe": 14.35
+      },
+      {
+        "symbol": "CBRE",
+        "name": "CBRE Group Inc Class A",
+        "weight": 4.76,
+        "roe": 13.57,
+        "earnings_growth": -12.1,
+        "net_margin": 2.85,
+        "pe": 37.56
+      },
+      {
+        "symbol": "O",
+        "name": "Realty Income Corp",
+        "weight": 4.72,
+        "roe": 2.7,
+        "earnings_growth": 41.2,
+        "net_margin": 18.37,
+        "pe": 57.74
+      },
+      {
+        "symbol": "DLR",
+        "name": "Digital Realty Trust Inc",
+        "weight": 4.55,
+        "roe": 5.47,
+        "earnings_growth": -53.4,
+        "net_margin": 21.52,
+        "pe": 50.05
+      },
+      {
+        "symbol": "PSA",
+        "name": "Public Storage",
+        "weight": 4.52,
+        "roe": 18.76,
+        "earnings_growth": -19.3,
+        "net_margin": 36.91,
+        "pe": 34.47
+      },
+      {
+        "symbol": "CCI",
+        "name": "Crown Castle Inc",
+        "weight": 4.04,
+        "net_margin": 10.41,
+        "pe": 35.53
+      }
+    ],
+    "holdings_coverage": 59.2,
+    "weighted_roe": 16.84,
+    "weighted_earnings_growth": 18.67,
+    "weighted_net_margin": 23.99,
+    "sector_weightings": {
+      "realestate": 1.0
+    },
+    "success": true
+  },
+  "XLC": {
+    "ticker": "XLC",
+    "updated_at": "2026-03-03T10:07:26.135175",
+    "source": "yfinance",
+    "pe_ratio": 17.99,
+    "earnings_yield": 5.56,
+    "pb_ratio": 3.7,
+    "ps_ratio": 2.6,
+    "pcf_ratio": 10.26,
+    "top_holdings": [
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc Class A",
+        "weight": 21.08,
+        "roe": 30.24,
+        "earnings_growth": 10.7,
+        "net_margin": 30.08,
+        "pe": 27.86
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc Class A",
+        "weight": 11.29,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.33
+      },
+      {
+        "symbol": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "weight": 9.04,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.34
+      },
+      {
+        "symbol": "VZ",
+        "name": "Verizon Communications Inc",
+        "weight": 4.87,
+        "roe": 17.07,
+        "earnings_growth": -53.3,
+        "net_margin": 12.43,
+        "pe": 12.31
+      },
+      {
+        "symbol": "NFLX",
+        "name": "Netflix Inc",
+        "weight": 4.78,
+        "roe": 42.76,
+        "earnings_growth": 32.7,
+        "net_margin": 24.3,
+        "pe": 38.38
+      },
+      {
+        "symbol": "CMCSA",
+        "name": "Comcast Corp Class A",
+        "weight": 4.71,
+        "roe": 21.41,
+        "earnings_growth": -52.5,
+        "net_margin": 16.17,
+        "pe": 5.72
+      },
+      {
+        "symbol": "T",
+        "name": "AT&T Inc",
+        "weight": 4.7,
+        "roe": 18.8,
+        "earnings_growth": -5.6,
+        "net_margin": 17.47,
+        "pe": 9.21
+      },
+      {
+        "symbol": "DIS",
+        "name": "The Walt Disney Co",
+        "weight": 4.53,
+        "roe": 12.02,
+        "earnings_growth": -4.3,
+        "net_margin": 12.8,
+        "pe": 15.37
+      },
+      {
+        "symbol": "TMUS",
+        "name": "T-Mobile US Inc",
+        "weight": 4.41,
+        "roe": 18.18,
+        "earnings_growth": -26.6,
+        "net_margin": 12.45,
+        "pe": 22.23
+      },
+      {
+        "symbol": "EA",
+        "name": "Electronic Arts Inc",
+        "weight": 4.38,
+        "roe": 10.03,
+        "earnings_growth": -68.5,
+        "net_margin": 9.31,
+        "pe": 75.3
+      }
+    ],
+    "holdings_coverage": 73.8,
+    "weighted_roe": 27.36,
+    "weighted_earnings_growth": 0.59,
+    "weighted_net_margin": 24.25,
+    "sector_weightings": {
+      "communication_services": 1.0
+    },
+    "success": true
+  },
+  "XLP": {
+    "ticker": "XLP",
+    "updated_at": "2026-03-03T10:07:31.997406",
+    "source": "yfinance",
+    "pe_ratio": 25.65,
+    "earnings_yield": 3.9,
+    "pb_ratio": 4.43,
+    "ps_ratio": 1.38,
+    "pcf_ratio": 15.64,
+    "top_holdings": [
+      {
+        "symbol": "WMT",
+        "name": "Walmart Inc",
+        "weight": 11.39,
+        "roe": 21.85,
+        "earnings_growth": -19.0,
+        "net_margin": 3.07,
+        "pe": 46.56
+      },
+      {
+        "symbol": "COST",
+        "name": "Costco Wholesale Corp",
+        "weight": 9.08,
+        "roe": 30.33,
+        "earnings_growth": 11.4,
+        "net_margin": 2.96,
+        "pe": 53.77
+      },
+      {
+        "symbol": "PG",
+        "name": "Procter & Gamble Co",
+        "weight": 7.73,
+        "roe": 31.56,
+        "earnings_growth": -5.4,
+        "net_margin": 19.3,
+        "pe": 24.22
+      },
+      {
+        "symbol": "KO",
+        "name": "Coca-Cola Co",
+        "weight": 6.31,
+        "roe": 43.32,
+        "earnings_growth": 3.6,
+        "net_margin": 27.34,
+        "pe": 26.39
+      },
+      {
+        "symbol": "PM",
+        "name": "Philip Morris International Inc",
+        "weight": 6.09,
+        "net_margin": 27.92,
+        "pe": 25.32
+      },
+      {
+        "symbol": "CL",
+        "name": "Colgate-Palmolive Co",
+        "weight": 4.67,
+        "roe": 497.47,
+        "net_margin": 10.46,
+        "pe": 37.0
+      },
+      {
+        "symbol": "PEP",
+        "name": "PepsiCo Inc",
+        "weight": 4.58,
+        "roe": 42.85,
+        "earnings_growth": 67.5,
+        "net_margin": 8.77,
+        "pe": 27.83
+      },
+      {
+        "symbol": "MDLZ",
+        "name": "Mondelez International Inc Class A",
+        "weight": 4.54,
+        "roe": 9.33,
+        "earnings_growth": -60.4,
+        "net_margin": 6.36,
+        "pe": 31.98
+      },
+      {
+        "symbol": "MO",
+        "name": "Altria Group Inc",
+        "weight": 4.42,
+        "earnings_growth": -62.9,
+        "net_margin": 34.49,
+        "pe": 16.67
+      },
+      {
+        "symbol": "MNST",
+        "name": "Monster Beverage Corp",
+        "weight": 3.69,
+        "roe": 26.82,
+        "earnings_growth": 66.6,
+        "net_margin": 22.97,
+        "pe": 46.06
+      }
+    ],
+    "holdings_coverage": 62.5,
+    "weighted_roe": 59.21,
+    "weighted_earnings_growth": -2.07,
+    "weighted_net_margin": 14.54,
+    "sector_weightings": {
+      "consumer_defensive": 1.0
+    },
+    "success": true
+  },
+  "SMH": {
+    "ticker": "SMH",
+    "updated_at": "2026-03-03T10:07:37.924978",
+    "source": "yfinance",
+    "pe_ratio": 42.79,
+    "earnings_yield": 2.34,
+    "pb_ratio": 8.65,
+    "ps_ratio": 11.05,
+    "pcf_ratio": 29.37,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 19.27,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "TSM",
+        "name": "Taiwan Semiconductor Manufacturing Co Ltd ADR",
+        "weight": 10.17,
+        "roe": 35.06,
+        "earnings_growth": 35.0,
+        "net_margin": 45.1,
+        "pe": 34.85
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 7.21,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      },
+      {
+        "symbol": "MU",
+        "name": "Micron Technology Inc",
+        "weight": 6.56,
+        "roe": 22.55,
+        "earnings_growth": 175.4,
+        "net_margin": 28.15,
+        "pe": 39.23
+      },
+      {
+        "symbol": "ASML",
+        "name": "ASML Holding NV ADR",
+        "weight": 5.89,
+        "roe": 50.46,
+        "earnings_growth": 7.2,
+        "net_margin": 29.42,
+        "pe": 49.02
+      },
+      {
+        "symbol": "LRCX",
+        "name": "Lam Research Corp",
+        "weight": 5.78,
+        "roe": 65.56,
+        "earnings_growth": 37.0,
+        "net_margin": 30.22,
+        "pe": 47.43
+      },
+      {
+        "symbol": "AMD",
+        "name": "Advanced Micro Devices Inc",
+        "weight": 4.95,
+        "roe": 7.08,
+        "earnings_growth": 217.1,
+        "net_margin": 12.52,
+        "pe": 76.39
+      },
+      {
+        "symbol": "TXN",
+        "name": "Texas Instruments Inc",
+        "weight": 4.95,
+        "roe": 30.15,
+        "earnings_growth": -3.2,
+        "net_margin": 28.28,
+        "pe": 38.43
+      },
+      {
+        "symbol": "AMAT",
+        "name": "Applied Materials Inc",
+        "weight": 4.88,
+        "roe": 38.86,
+        "earnings_growth": 75.2,
+        "net_margin": 27.78,
+        "pe": 38.17
+      },
+      {
+        "symbol": "KLAC",
+        "name": "KLA Corp",
+        "weight": 4.8,
+        "roe": 100.73,
+        "earnings_growth": 40.9,
+        "net_margin": 35.76,
+        "pe": 44.65
+      }
+    ],
+    "holdings_coverage": 74.5,
+    "weighted_roe": 56.65,
+    "weighted_earnings_growth": 88.41,
+    "weighted_net_margin": 38.04,
+    "sector_weightings": {
+      "technology": 1.0
+    },
+    "success": true
+  },
+  "EWY": {
+    "ticker": "EWY",
+    "updated_at": "2026-03-03T10:07:43.786446",
+    "source": "yfinance",
+    "pe_ratio": 18.23,
+    "earnings_yield": 5.48,
+    "pb_ratio": 2.0,
+    "ps_ratio": 1.55,
+    "pcf_ratio": 10.5,
+    "top_holdings": [
+      {
+        "symbol": "005930.KS",
+        "name": "Samsung Electronics Co Ltd",
+        "weight": 26.43,
+        "roe": 10.78,
+        "earnings_growth": 162.2,
+        "net_margin": 13.27
+      },
+      {
+        "symbol": "000660.KS",
+        "name": "SK Hynix Inc",
+        "weight": 20.6,
+        "roe": 49.39,
+        "earnings_growth": 86.0,
+        "net_margin": 44.18
+      },
+      {
+        "symbol": "005380.KS",
+        "name": "Hyundai Motor Co",
+        "weight": 2.89,
+        "roe": 8.36,
+        "net_margin": 5.07
+      },
+      {
+        "symbol": "402340.KS",
+        "name": "SK Square",
+        "weight": 2.4,
+        "roe": 37.08,
+        "net_margin": 624.78
+      },
+      {
+        "symbol": "105560.KS",
+        "name": "KB Financial Group Inc",
+        "weight": 2.14,
+        "roe": 9.65,
+        "earnings_growth": 3.6,
+        "net_margin": 37.5
+      },
+      {
+        "symbol": "012450.KS",
+        "name": "Hanwha Aerospace Co Ltd",
+        "weight": 1.91,
+        "roe": 33.08,
+        "earnings_growth": 45.4,
+        "net_margin": 11.33
+      },
+      {
+        "symbol": "034020.KS",
+        "name": "Doosan Enerbility Co Ltd",
+        "weight": 1.77,
+        "roe": 0.79,
+        "net_margin": -0.61
+      },
+      {
+        "symbol": "035420.KS",
+        "name": "NAVER Corp",
+        "weight": 1.66,
+        "net_margin": 15.12
+      },
+      {
+        "symbol": "000270.KS",
+        "name": "Kia Corp",
+        "weight": 1.55,
+        "roe": 14.09,
+        "earnings_growth": -36.7,
+        "net_margin": 6.92
+      },
+      {
+        "symbol": "055550.KS",
+        "name": "Shinhan Financial Group Co Ltd",
+        "weight": 1.54,
+        "roe": 8.53,
+        "earnings_growth": 29.3,
+        "net_margin": 31.56
+      }
+    ],
+    "holdings_coverage": 62.9,
+    "weighted_roe": 24.42,
+    "weighted_earnings_growth": 97.65,
+    "weighted_net_margin": 47.08,
+    "sector_weightings": {
+      "consumer_cyclical": 0.0706,
+      "basic_materials": 0.0174,
+      "consumer_defensive": 0.0151,
+      "technology": 0.5261,
+      "communication_services": 0.0376,
+      "financial_services": 0.0976,
+      "utilities": 0.0069,
+      "industrials": 0.1794,
+      "energy": 0.0112,
+      "healthcare": 0.0381
+    },
+    "success": true
+  },
+  "EWZ": {
+    "ticker": "EWZ",
+    "updated_at": "2026-03-03T10:07:49.760307",
+    "source": "yfinance",
+    "pe_ratio": 12.59,
+    "earnings_yield": 7.94,
+    "pb_ratio": 1.96,
+    "ps_ratio": 1.61,
+    "pcf_ratio": 5.99,
+    "top_holdings": [
+      {
+        "symbol": "NU",
+        "name": "Nu Holdings Ltd Ordinary Shares Class A",
+        "weight": 11.25,
+        "roe": 30.28,
+        "earnings_growth": 60.9,
+        "net_margin": 41.04,
+        "pe": 29.21
+      },
+      {
+        "symbol": "VALE3.SA",
+        "name": "Vale SA",
+        "weight": 10.79,
+        "roe": 5.87,
+        "net_margin": 6.47,
+        "pe": 31.26
+      },
+      {
+        "symbol": "ITUB4",
+        "name": "Itau Unibanco Holding SA Participating Preferred",
+        "weight": 8.87
+      },
+      {
+        "symbol": "PETR4",
+        "name": "Petroleo Brasileiro SA Petrobras Participating Preferred",
+        "weight": 6.03
+      },
+      {
+        "symbol": "PETR3.SA",
+        "name": "Petroleo Brasileiro SA Petrobras",
+        "weight": 5.33,
+        "roe": 19.02,
+        "earnings_growth": 0.5,
+        "net_margin": 15.77,
+        "pe": 8.07
+      },
+      {
+        "symbol": "BBDC4",
+        "name": "Bank Bradesco SA Participating Preferred",
+        "weight": 3.7
+      },
+      {
+        "symbol": "WEGE3.SA",
+        "name": "Weg SA",
+        "weight": 3.3,
+        "roe": 32.51,
+        "earnings_growth": -6.3,
+        "net_margin": 15.63,
+        "pe": 31.62
+      },
+      {
+        "symbol": "B3SA3.SA",
+        "name": "B3 SA - Brasil Bolsa Balcao",
+        "weight": 3.24,
+        "roe": 25.59,
+        "earnings_growth": -16.9,
+        "net_margin": 45.54,
+        "pe": 20.1
+      },
+      {
+        "symbol": "BPAC11",
+        "name": "Banco BTG Pactual S.A. Units Cons of 1 Sh ' 2 Pfd Shs -A-",
+        "weight": 2.75
+      },
+      {
+        "symbol": "ABEV3.SA",
+        "name": "Ambev SA",
+        "weight": 2.69,
+        "roe": 16.98,
+        "earnings_growth": -10.1,
+        "net_margin": 17.57,
+        "pe": 17.11
+      }
+    ],
+    "holdings_coverage": 58.0,
+    "weighted_roe": 12.79,
+    "weighted_earnings_growth": 10.1,
+    "weighted_net_margin": 14.87,
+    "sector_weightings": {
+      "consumer_cyclical": 0.013,
+      "basic_materials": 0.1433,
+      "consumer_defensive": 0.043,
+      "technology": 0.0131,
+      "communication_services": 0.0214,
+      "financial_services": 0.3629,
+      "utilities": 0.1151,
+      "industrials": 0.12,
+      "energy": 0.1411,
+      "healthcare": 0.027
+    },
+    "success": true
+  },
+  "EEM": {
+    "ticker": "EEM",
+    "updated_at": "2026-03-03T10:07:57.449809",
+    "source": "yfinance",
+    "pe_ratio": 15.93,
+    "earnings_yield": 6.28,
+    "pb_ratio": 2.08,
+    "ps_ratio": 1.89,
+    "pcf_ratio": 10.84,
+    "top_holdings": [
+      {
+        "symbol": "2330.TW",
+        "name": "Taiwan Semiconductor Manufacturing Co Ltd",
+        "weight": 12.47,
+        "roe": 35.06,
+        "earnings_growth": 35.0,
+        "net_margin": 45.1,
+        "pe": 29.25
+      },
+      {
+        "symbol": "005930.KS",
+        "name": "Samsung Electronics Co Ltd",
+        "weight": 4.74,
+        "roe": 10.78,
+        "earnings_growth": 162.2,
+        "net_margin": 13.27
+      },
+      {
+        "symbol": "0700.HK",
+        "name": "Tencent Holdings Ltd",
+        "weight": 4.46,
+        "roe": 19.83,
+        "earnings_growth": 20.1,
+        "net_margin": 29.86,
+        "pe": 20.15
+      },
+      {
+        "symbol": "9988.HK",
+        "name": "Alibaba Group Holding Ltd Ordinary Shares",
+        "weight": 3.34,
+        "roe": 11.19,
+        "earnings_growth": -51.8,
+        "net_margin": 12.19,
+        "pe": 18.09
+      },
+      {
+        "symbol": "000660.KS",
+        "name": "SK Hynix Inc",
+        "weight": 3.09,
+        "roe": 49.39,
+        "earnings_growth": 86.0,
+        "net_margin": 44.18
+      },
+      {
+        "symbol": "HDFCBANK.NS",
+        "name": "HDFC Bank Ltd",
+        "weight": 1.02,
+        "roe": 14.02,
+        "earnings_growth": 11.5,
+        "net_margin": 26.19,
+        "pe": 19.61
+      },
+      {
+        "symbol": "00939",
+        "name": "China Construction Bank Corp Class H",
+        "weight": 0.88
+      },
+      {
+        "symbol": "RELIANCE.NS",
+        "name": "Reliance Industries Ltd",
+        "weight": 0.83,
+        "earnings_growth": 0.6,
+        "net_margin": 8.12,
+        "pe": 22.07
+      },
+      {
+        "symbol": "2317.TW",
+        "name": "Hon Hai Precision Industry Co Ltd",
+        "weight": 0.79,
+        "roe": 11.82,
+        "earnings_growth": 15.9,
+        "net_margin": 2.5,
+        "pe": 17.05
+      },
+      {
+        "symbol": "2454.TW",
+        "name": "MediaTek Inc",
+        "weight": 0.76,
+        "roe": 26.06,
+        "earnings_growth": -3.7,
+        "net_margin": 17.67,
+        "pe": 27.29
+      }
+    ],
+    "holdings_coverage": 32.4,
+    "weighted_roe": 25.03,
+    "weighted_earnings_growth": 43.53,
+    "weighted_net_margin": 30.41,
+    "sector_weightings": {
+      "realestate": 0.0129,
+      "consumer_cyclical": 0.1139,
+      "basic_materials": 0.0731,
+      "consumer_defensive": 0.0321,
+      "technology": 0.3053,
+      "communication_services": 0.0886,
+      "financial_services": 0.2126,
+      "utilities": 0.0203,
+      "industrials": 0.0709,
+      "energy": 0.0386,
+      "healthcare": 0.0318
+    },
+    "success": true
+  },
+  "GPIQ": {
+    "ticker": "GPIQ",
+    "updated_at": "2026-03-03T10:08:03.566795",
+    "source": "yfinance",
+    "pe_ratio": 33.08,
+    "earnings_yield": 3.02,
+    "pb_ratio": 7.94,
+    "ps_ratio": 5.49,
+    "pcf_ratio": 22.73,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 8.94,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "weight": 7.38,
+        "roe": 152.02,
+        "earnings_growth": 18.3,
+        "net_margin": 27.04,
+        "pe": 33.55
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 6.15,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc",
+        "weight": 4.92,
+        "roe": 22.29,
+        "earnings_growth": 5.0,
+        "net_margin": 10.83,
+        "pe": 29.06
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc Class A",
+        "weight": 4.05,
+        "roe": 30.24,
+        "earnings_growth": 10.7,
+        "net_margin": 30.08,
+        "pe": 27.86
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc Class A",
+        "weight": 3.79,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.33
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "weight": 3.66,
+        "roe": 4.93,
+        "earnings_growth": -60.6,
+        "net_margin": 4.0,
+        "pe": 370.02
+      },
+      {
+        "symbol": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "weight": 3.51,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.34
+      },
+      {
+        "symbol": "WMT",
+        "name": "Walmart Inc",
+        "weight": 3.09,
+        "roe": 21.85,
+        "earnings_growth": -19.0,
+        "net_margin": 3.07,
+        "pe": 46.56
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 3.01,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      }
+    ],
+    "holdings_coverage": 48.5,
+    "weighted_roe": 60.04,
+    "weighted_earnings_growth": 39.95,
+    "weighted_net_margin": 30.6,
+    "sector_weightings": {
+      "realestate": 0.0014,
+      "consumer_cyclical": 0.1288,
+      "basic_materials": 0.0114,
+      "consumer_defensive": 0.0779,
+      "technology": 0.5109,
+      "communication_services": 0.1673,
+      "financial_services": 0.0026,
+      "utilities": 0.0131,
+      "industrials": 0.0318,
+      "energy": 0.0054,
+      "healthcare": 0.0494
+    },
+    "success": true
+  },
+  "XDTE": {
+    "ticker": "XDTE",
+    "updated_at": "2026-03-03T10:08:08.865789",
+    "source": "yfinance",
+    "pe_ratio": 27.43,
+    "earnings_yield": 3.65,
+    "pb_ratio": 5.02,
+    "ps_ratio": 3.47,
+    "pcf_ratio": 19.46,
+    "top_holdings": [
+      {
+        "symbol": "WEEK",
+        "name": "Roundhill Weekly T-Bill ETF",
+        "weight": 7.01
+      },
+      {
+        "symbol": "FGXXX",
+        "name": "First American Government Obligs X",
+        "weight": 2.43
+      }
+    ],
+    "holdings_coverage": 9.4,
+    "weighted_roe": 0.0,
+    "weighted_earnings_growth": 0.0,
+    "weighted_net_margin": 0.0,
+    "sector_weightings": {
+      "realestate": 0.0185,
+      "consumer_cyclical": 0.106,
+      "basic_materials": 0.0177,
+      "consumer_defensive": 0.05,
+      "technology": 0.341,
+      "communication_services": 0.1124,
+      "financial_services": 0.1263,
+      "utilities": 0.0225,
+      "industrials": 0.0795,
+      "energy": 0.0317,
+      "healthcare": 0.0945
+    },
+    "success": true
+  },
+  "RDTE": {
+    "ticker": "RDTE",
+    "updated_at": "2026-03-03T10:08:10.119480",
+    "source": "yfinance",
+    "pe_ratio": 0,
+    "earnings_yield": 0.0,
+    "pb_ratio": 0,
+    "ps_ratio": 0,
+    "pcf_ratio": 0,
+    "top_holdings": [
+      {
+        "symbol": "WEEK",
+        "name": "Roundhill Weekly T-Bill ETF",
+        "weight": 7.17
+      },
+      {
+        "symbol": "FGXXX",
+        "name": "First American Government Obligs X",
+        "weight": 1.51
+      }
+    ],
+    "holdings_coverage": 8.7,
+    "weighted_roe": 0.0,
+    "weighted_earnings_growth": 0.0,
+    "weighted_net_margin": 0.0,
+    "success": true
+  },
+  "QYLD": {
+    "ticker": "QYLD",
+    "updated_at": "2026-03-03T10:08:10.993998",
+    "source": "yfinance",
+    "pe_ratio": 33.09,
+    "earnings_yield": 3.02,
+    "pb_ratio": 7.94,
+    "ps_ratio": 5.48,
+    "pcf_ratio": 22.72,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 9.07,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "weight": 7.48,
+        "roe": 152.02,
+        "earnings_growth": 18.3,
+        "net_margin": 27.04,
+        "pe": 33.55
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 6.24,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc",
+        "weight": 5.0,
+        "roe": 22.29,
+        "earnings_growth": 5.0,
+        "net_margin": 10.83,
+        "pe": 29.06
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc Class A",
+        "weight": 4.11,
+        "roe": 30.24,
+        "earnings_growth": 10.7,
+        "net_margin": 30.08,
+        "pe": 27.86
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc Class A",
+        "weight": 3.84,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.33
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "weight": 3.72,
+        "roe": 4.93,
+        "earnings_growth": -60.6,
+        "net_margin": 4.0,
+        "pe": 370.02
+      },
+      {
+        "symbol": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "weight": 3.58,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.34
+      },
+      {
+        "symbol": "WMT",
+        "name": "Walmart Inc",
+        "weight": 3.14,
+        "roe": 21.85,
+        "earnings_growth": -19.0,
+        "net_margin": 3.07,
+        "pe": 46.56
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 3.06,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      }
+    ],
+    "holdings_coverage": 49.3,
+    "weighted_roe": 60.01,
+    "weighted_earnings_growth": 39.93,
+    "weighted_net_margin": 30.6,
+    "sector_weightings": {
+      "realestate": 0.0013,
+      "consumer_cyclical": 0.1288,
+      "basic_materials": 0.0113,
+      "consumer_defensive": 0.0781,
+      "technology": 0.5101,
+      "communication_services": 0.1675,
+      "financial_services": 0.0026,
+      "utilities": 0.0136,
+      "industrials": 0.0318,
+      "energy": 0.0054,
+      "healthcare": 0.0494
+    },
+    "success": true
+  },
+  "SPY": {
+    "ticker": "SPY",
+    "updated_at": "2026-03-03T10:08:15.934815",
+    "source": "yfinance",
+    "pe_ratio": 27.86,
+    "earnings_yield": 3.59,
+    "pb_ratio": 5.12,
+    "ps_ratio": 3.55,
+    "pcf_ratio": 19.69,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 7.83,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "weight": 6.47,
+        "roe": 152.02,
+        "earnings_growth": 18.3,
+        "net_margin": 27.04,
+        "pe": 33.55
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 5.39,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc",
+        "weight": 3.93,
+        "roe": 22.29,
+        "earnings_growth": 5.0,
+        "net_margin": 10.83,
+        "pe": 29.06
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc Class A",
+        "weight": 3.32,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.33
+      },
+      {
+        "symbol": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "weight": 2.66,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.34
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 2.64,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc Class A",
+        "weight": 2.63,
+        "roe": 30.24,
+        "earnings_growth": 10.7,
+        "net_margin": 30.08,
+        "pe": 27.86
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "weight": 2.04,
+        "roe": 4.93,
+        "earnings_growth": -60.6,
+        "net_margin": 4.0,
+        "pe": 370.02
+      },
+      {
+        "symbol": "BRK-B",
+        "name": "Berkshire Hathaway Inc Class B",
+        "weight": 1.49,
+        "roe": 9.81,
+        "earnings_growth": -2.5,
+        "net_margin": 18.03,
+        "pe": 15.36
+      }
+    ],
+    "holdings_coverage": 38.4,
+    "weighted_roe": 63.83,
+    "weighted_earnings_growth": 46.69,
+    "weighted_net_margin": 33.06,
+    "sector_weightings": {
+      "realestate": 0.0185,
+      "consumer_cyclical": 0.1059,
+      "basic_materials": 0.0177,
+      "consumer_defensive": 0.05,
+      "technology": 0.3409,
+      "communication_services": 0.1123,
+      "financial_services": 0.1266,
+      "utilities": 0.0225,
+      "industrials": 0.0795,
+      "energy": 0.0317,
+      "healthcare": 0.0944
+    },
+    "success": true
+  },
+  "QQQ": {
+    "ticker": "QQQ",
+    "updated_at": "2026-03-03T10:08:20.814640",
+    "source": "yfinance",
+    "pe_ratio": 33.43,
+    "earnings_yield": 2.99,
+    "pb_ratio": 8.17,
+    "ps_ratio": 5.66,
+    "pcf_ratio": 22.81,
+    "top_holdings": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "weight": 8.9,
+        "roe": 101.48,
+        "earnings_growth": 95.6,
+        "net_margin": 55.6,
+        "pe": 37.16
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "weight": 7.35,
+        "roe": 152.02,
+        "earnings_growth": 18.3,
+        "net_margin": 27.04,
+        "pe": 33.55
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 6.13,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc",
+        "weight": 4.9,
+        "roe": 22.29,
+        "earnings_growth": 5.0,
+        "net_margin": 10.83,
+        "pe": 29.06
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc Class A",
+        "weight": 4.03,
+        "roe": 30.24,
+        "earnings_growth": 10.7,
+        "net_margin": 30.08,
+        "pe": 27.86
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc Class A",
+        "weight": 3.77,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.33
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "weight": 3.65,
+        "roe": 4.93,
+        "earnings_growth": -60.6,
+        "net_margin": 4.0,
+        "pe": 370.02
+      },
+      {
+        "symbol": "GOOG",
+        "name": "Alphabet Inc Class C",
+        "weight": 3.51,
+        "roe": 35.71,
+        "earnings_growth": 31.1,
+        "net_margin": 32.81,
+        "pe": 28.34
+      },
+      {
+        "symbol": "WMT",
+        "name": "Walmart Inc",
+        "weight": 3.08,
+        "roe": 21.85,
+        "earnings_growth": -19.0,
+        "net_margin": 3.07,
+        "pe": 46.56
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc",
+        "weight": 3.0,
+        "roe": 31.05,
+        "earnings_growth": 188.1,
+        "net_margin": 36.2,
+        "pe": 66.7
+      }
+    ],
+    "holdings_coverage": 48.3,
+    "weighted_roe": 60.03,
+    "weighted_earnings_growth": 39.95,
+    "weighted_net_margin": 30.6,
+    "sector_weightings": {
+      "realestate": 0.0014,
+      "consumer_cyclical": 0.1287,
+      "basic_materials": 0.0113,
+      "consumer_defensive": 0.078,
+      "technology": 0.5105,
+      "communication_services": 0.1673,
+      "financial_services": 0.0026,
+      "utilities": 0.0136,
+      "industrials": 0.0318,
+      "energy": 0.0054,
+      "healthcare": 0.0494
+    },
+    "success": true
+  },
+  "IWM": {
+    "ticker": "IWM",
+    "updated_at": "2026-03-03T10:08:25.870651",
+    "source": "yfinance",
+    "pe_ratio": 18.73,
+    "earnings_yield": 5.34,
+    "pb_ratio": 2.16,
+    "ps_ratio": 1.42,
+    "pcf_ratio": 11.13,
+    "top_holdings": [
+      {
+        "symbol": "BE",
+        "name": "Bloom Energy Corp Class A",
+        "weight": 1.08,
+        "roe": -12.65,
+        "earnings_growth": -98.8,
+        "net_margin": -4.37
+      },
+      {
+        "symbol": "CRDO",
+        "name": "Credo Technology Group Holding Ltd",
+        "weight": 0.63,
+        "roe": 27.54,
+        "earnings_growth": 412.5,
+        "net_margin": 31.81,
+        "pe": 97.62
+      },
+      {
+        "symbol": "FN",
+        "name": "Fabrinet",
+        "weight": 0.58,
+        "roe": 18.72,
+        "earnings_growth": 30.7,
+        "net_margin": 9.69,
+        "pe": 55.85
+      },
+      {
+        "symbol": "KTOS",
+        "name": "Kratos Defense & Security Solutions Inc",
+        "weight": 0.56,
+        "roe": 1.31,
+        "earnings_growth": 18.6,
+        "net_margin": 1.63,
+        "pe": 697.85
+      },
+      {
+        "symbol": "NXT",
+        "name": "Nextpower Inc Class A",
+        "weight": 0.56,
+        "roe": 33.17,
+        "earnings_growth": 7.9,
+        "net_margin": 16.43,
+        "pe": 26.46
+      },
+      {
+        "symbol": "SATS",
+        "name": "EchoStar Corp Class A",
+        "weight": 0.5,
+        "roe": -111.35,
+        "net_margin": -96.62
+      },
+      {
+        "symbol": "HL",
+        "name": "Hecla Mining Co",
+        "weight": 0.47,
+        "roe": 13.89,
+        "earnings_growth": 951.5,
+        "net_margin": 22.61,
+        "pe": 50.27
+      },
+      {
+        "symbol": "GH",
+        "name": "Guardant Health Inc",
+        "weight": 0.45,
+        "net_margin": -42.39
+      },
+      {
+        "symbol": "IONQ",
+        "name": "IonQ Inc Class A",
+        "weight": 0.44,
+        "roe": -24.4,
+        "net_margin": 0.0
+      },
+      {
+        "symbol": "CDE",
+        "name": "Coeur Mining Inc",
+        "weight": 0.43,
+        "roe": 26.41,
+        "earnings_growth": 246.6,
+        "net_margin": 28.3,
+        "pe": 28.36
+      }
+    ],
+    "holdings_coverage": 5.7,
+    "weighted_roe": -2.65,
+    "weighted_earnings_growth": 129.09,
+    "weighted_net_margin": -2.46,
+    "sector_weightings": {
+      "realestate": 0.0628,
+      "consumer_cyclical": 0.0909,
+      "basic_materials": 0.0487,
+      "consumer_defensive": 0.0257,
+      "technology": 0.1519,
+      "communication_services": 0.0251,
+      "financial_services": 0.1661,
+      "utilities": 0.0305,
+      "industrials": 0.167,
+      "energy": 0.0519,
+      "healthcare": 0.1793
+    },
+    "success": true
+  },
+  "DIA": {
+    "ticker": "DIA",
+    "updated_at": "2026-03-03T10:08:31.725617",
+    "source": "yfinance",
+    "pe_ratio": 23.6,
+    "earnings_yield": 4.24,
+    "pb_ratio": 5.07,
+    "ps_ratio": 3.21,
+    "pcf_ratio": 20.0,
+    "top_holdings": [
+      {
+        "symbol": "GS",
+        "name": "The Goldman Sachs Group Inc",
+        "weight": 11.77,
+        "roe": 13.86,
+        "earnings_growth": 17.3,
+        "net_margin": 28.92,
+        "pe": 16.78
+      },
+      {
+        "symbol": "CAT",
+        "name": "Caterpillar Inc",
+        "weight": 8.27,
+        "roe": 43.53,
+        "earnings_growth": -11.4,
+        "net_margin": 13.14,
+        "pe": 40.0
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp",
+        "weight": 5.42,
+        "roe": 34.39,
+        "earnings_growth": 59.8,
+        "net_margin": 39.04,
+        "pe": 24.94
+      },
+      {
+        "symbol": "HD",
+        "name": "The Home Depot Inc",
+        "weight": 4.71,
+        "roe": 145.54,
+        "earnings_growth": -14.5,
+        "net_margin": 8.6,
+        "pe": 26.04
+      },
+      {
+        "symbol": "SHW",
+        "name": "Sherwin-Williams Co",
+        "weight": 4.46,
+        "roe": 59.39,
+        "earnings_growth": 1.4,
+        "net_margin": 10.9,
+        "pe": 34.71
+      },
+      {
+        "symbol": "AXP",
+        "name": "American Express Co",
+        "weight": 4.43,
+        "roe": 33.99,
+        "earnings_growth": 16.6,
+        "net_margin": 16.17,
+        "pe": 20.0
+      },
+      {
+        "symbol": "AMGN",
+        "name": "Amgen Inc",
+        "weight": 4.3,
+        "roe": 106.1,
+        "earnings_growth": 112.1,
+        "net_margin": 20.98,
+        "pe": 27.1
+      },
+      {
+        "symbol": "V",
+        "name": "Visa Inc Class A",
+        "weight": 4.05,
+        "roe": 53.95,
+        "earnings_growth": 17.4,
+        "net_margin": 50.23,
+        "pe": 30.12
+      },
+      {
+        "symbol": "MCD",
+        "name": "McDonald's Corp",
+        "weight": 3.96,
+        "earnings_growth": 8.2,
+        "net_margin": 31.85,
+        "pe": 28.02
+      },
+      {
+        "symbol": "IBM",
+        "name": "International Business Machines Corp",
+        "weight": 3.86,
+        "roe": 35.16,
+        "earnings_growth": 89.9,
+        "net_margin": 15.69,
+        "pe": 21.51
+      }
+    ],
+    "holdings_coverage": 55.3,
+    "weighted_roe": 47.46,
+    "weighted_earnings_growth": 24.92,
+    "weighted_net_margin": 23.57,
+    "sector_weightings": {
+      "consumer_cyclical": 0.1248,
+      "basic_materials": 0.0447,
+      "consumer_defensive": 0.0435,
+      "technology": 0.1861,
+      "communication_services": 0.0198,
+      "financial_services": 0.277,
+      "industrials": 0.1601,
+      "energy": 0.0223,
+      "healthcare": 0.1217
+    },
+    "success": true
+  }
+}

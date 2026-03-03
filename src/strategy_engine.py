@@ -107,7 +107,7 @@ class StrategyEngine:
         },
         'technical': {
             'factors': ['adx', 'bb_pos', 'dist_ma10', 'cci', 'mfi'],
-            'weight': 0.25,
+            'weight': 0.30,
             'description': '技术指标 - 趋势强度+布林带+均线偏离+通道+资金流'
         },
         'risk': {
@@ -122,7 +122,7 @@ class StrategyEngine:
         },
         'liquidity': {
             'factors': ['trading_volume', 'turnover_change'],
-            'weight': 0.25,
+            'weight': 0.15,
             'description': '流动性因子 - 成交量+换手率变化'
         }
     }

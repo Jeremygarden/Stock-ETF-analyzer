@@ -106,9 +106,9 @@ class StrategyEngine:
             'description': '短期收益 - 日内和日度收益'
         },
         'technical': {
-            'factors': ['adx', 'bb_pos', 'dist_ma10'],
+            'factors': ['adx', 'bb_pos', 'dist_ma10', 'cci', 'mfi'],
             'weight': 0.25,
-            'description': '技术指标 - 趋势强度+布林带+均线偏离'
+            'description': '技术指标 - 趋势强度+布林带+均线偏离+通道+资金流'
         },
         'risk': {
             'factors': ['kurt_20', 'skew_20'],
@@ -121,9 +121,9 @@ class StrategyEngine:
             'description': '动量因子 - 趋势确认'
         },
         'liquidity': {
-            'factors': ['trading_volume', 'size', 'turnover_change'],
+            'factors': ['trading_volume', 'turnover_change'],
             'weight': 0.25,
-            'description': '流动性因子 - 交易活跃度'
+            'description': '流动性因子 - 成交量+换手率变化'
         }
     }
     

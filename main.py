@@ -1,8 +1,8 @@
 """
-ETF轮动系统主程序 (v4.0)
-支持双策略选择:
-- 策略一: 长期动量策略 (基本面+技术面)
-- 策略二: 短期机会策略 (纯技术面)
+ETF轮动系统主程序 (v4.1)
+支持多策略选择，后续可扩展新策略:
+- 策略一: 长期动量策略 (双动量+基本面+波动率)
+- 策略二: 短期机会策略 (技术指标+流动性+风险预警)
 """
 
 import os
@@ -14,11 +14,11 @@ import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from dual_strategy import DualStrategyModel, calculate_portfolio_scores
+from strategy_engine import StrategyEngine, calculate_portfolio_scores
 from config import ETF_CONFIG
 
 
-def run_dual_strategy(strategy: int = 1):
+def run_strategy(strategy: int = 1):
     """运行双策略分析"""
     print(f"\n{'='*70}")
     print(f"ETF轮动系统 v4.0 - {'策略一(长期动量)' if strategy == 1 else '策略二(短期机会)'}")
@@ -40,7 +40,7 @@ def run_dual_strategy(strategy: int = 1):
     # 3. 输出结果
     print(f"\n[2/2] 输出结果...\n")
     
-    model = DualStrategyModel(strategy=strategy)
+    model = StrategyEngine(strategy=strategy)
     factor_list = model.get_recommended_factors()
     
     # 打印配置
@@ -103,8 +103,8 @@ def compare_strategies():
     print(f"{'='*70}\n")
     
     # 运行两个策略
-    result1 = run_dual_strategy(strategy=1)
-    result2 = run_dual_strategy(strategy=2)
+    result1 = run_strategy(strategy=1)
+    result2 = run_strategy(strategy=2)
     
     # 对比
     print(f"\n{'='*70}")
@@ -156,9 +156,9 @@ def main():
     args = parser.parse_args()
     
     if args.mode == 'strategy1':
-        run_dual_strategy(strategy=1)
+        run_strategy(strategy=1)
     elif args.mode == 'strategy2':
-        run_dual_strategy(strategy=2)
+        run_strategy(strategy=2)
     elif args.mode == 'compare':
         compare_strategies()
 

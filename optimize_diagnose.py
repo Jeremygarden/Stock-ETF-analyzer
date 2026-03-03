@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-from dual_strategy import DualStrategyModel
+from strategy_engine import DualStrategyModel
 from config import ETF_CONFIG
 
 

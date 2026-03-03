@@ -1,13 +1,27 @@
 """
-双策略ETF量化分析系统
-==================
+ETF多策略量化引擎 (Strategy Engine)
+====================================
 
-提供两套独立的策略:
-- 策略一: 长期动量策略 (基本面+技术面混合)
-- 策略二: 短期机会策略 (纯技术面)
+统一的策略管理和因子计算引擎，支持多策略切换和扩展。
+
+当前策略:
+- 策略一 (strategy1): 长期动量策略
+    双动量(CSMOM+TSMOM) + 基本面(价值/质量/成长) + 波动率
+- 策略二 (strategy2): 短期机会策略
+    日内收益 + 技术指标(ADX/CCI/BB) + 风险预警 + 流动性
+
+扩展新策略:
+1. 在 STRATEGY_X_FACTORS 中定义因子组和权重
+2. 在 __init__ 中添加策略选择分支
+3. 运行: python main.py --mode strategyX
+
+依赖模块:
+- etf_fundamentals.py: 基本面穿透计算 + 缓存
+- config.py: ETF池配置
 
 Author: Financer AI
 Date: 2026-03-02
+Updated: 2026-03-03 (重命名 dual_strategy → strategy_engine)
 """
 
 import numpy as np
@@ -25,13 +39,16 @@ except ImportError:
     HAS_FUNDAMENTALS = False
 
 
-class DualStrategyModel:
+class StrategyEngine:
     """
-    双策略量化模型
+    ETF多策略量化引擎
     
-    提供两套策略选择:
-    - Strategy 1: 长期动量策略 (基本面+技术面)
-    - Strategy 2: 短期机会策略 (纯技术面)
+    管理多套策略的因子配置、计算和评分。
+    支持动态切换策略，便于后续扩展新策略。
+    
+    使用:
+        engine = StrategyEngine(strategy=1)  # 长期动量
+        engine = StrategyEngine(strategy=2)  # 短期机会
     """
     
     # ==================== 策略一配置 ====================
@@ -661,7 +678,7 @@ def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.Data
     """
     import time
     
-    model = DualStrategyModel(strategy=strategy)
+    model = StrategyEngine(strategy=strategy)
     
     # ===== 第1阶段: 收集所有ETF原始因子 =====
     all_factors = []
@@ -813,7 +830,7 @@ if __name__ == '__main__':
     print("策略一: 长期动量策略")
     print("="*60)
     
-    model1 = DualStrategyModel(strategy=1)
+    model1 = StrategyEngine(strategy=1)
     print(f"因子配置: {model1.factor_config.keys()}")
     
     # 测试单只ETF
@@ -828,9 +845,13 @@ if __name__ == '__main__':
     print("策略二: 短期机会策略")
     print("="*60)
     
-    model2 = DualStrategyModel(strategy=2)
+    model2 = StrategyEngine(strategy=2)
     score2 = model2.calculate_strategy_score(factors)
     print(f"综合得分: {score2['composite_score']}")
     
     risk = model2.check_risk_signals(factors)
     print(f"风险信号: {risk}")
+
+
+# ===== 向后兼容别名 =====
+DualStrategyModel = StrategyEngine

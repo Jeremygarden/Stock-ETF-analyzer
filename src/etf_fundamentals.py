@@ -199,7 +199,7 @@ def get_fundamental_factors(ticker: str, force_refresh: bool = False) -> Dict:
     """
     获取用于策略计算的基本面因子
     
-    返回标准化的因子字典，可直接用于dual_strategy
+    返回标准化的因子字典，可直接用于strategy_engine
     
     Args:
         ticker: ETF代码

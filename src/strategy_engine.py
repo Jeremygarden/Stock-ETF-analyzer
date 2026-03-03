@@ -56,6 +56,11 @@ class StrategyEngine:
     # 核心思路:
     # - CSMOM (横截面动量): 在ETF池中横向排名，取Top 20%
     # - TSMOM (时序动量): 检查绝对动量是否为正，若为负则不持有
+    #
+    # 因子相关性优化 (2026-03-03):
+    # - 删除 ret_20d (与ret_60d相关0.95)
+    # - 删除 atr_ratio (与vol_20相关0.97)
+    # - 删除 cci (与bb_pos相关0.97)
     STRATEGY_1_FACTORS = {
         'dual_momentum': {
             'factors': ['csmom_rank', 'tsmom_signal', 'relative_momentum', 'absolute_momentum'],
@@ -63,9 +68,9 @@ class StrategyEngine:
             'description': '双动量 - CSMOM横截面排名 + TSMOM趋势确认'
         },
         'momentum': {
-            'factors': ['momentum_1m', 'momentum_3m', 'momentum_accel'],
+            'factors': ['momentum_1m', 'momentum_accel'],
             'weight': 0.15,
-            'description': '动量因子 - 捕捉价格趋势'
+            'description': '动量因子 - 短期动量+动量加速度'
         },
         'value': {
             'factors': ['earnings_yield'],
@@ -83,14 +88,17 @@ class StrategyEngine:
             'description': '成长因子 - 业绩增长'
         },
         'volatility': {
-            'factors': ['volatility_1m'],
+            'factors': ['vol_20', 'bb_pos'],
             'weight': 0.15,
-            'description': '波动率因子 - 风险控制'
+            'description': '波动率因子 - 波动率+布林带位置'
         }
     }
     
     # ==================== 策略二配置 ====================
     # 短期机会策略 - 适合捕捉短期交易机会
+    #
+    # 因子相关性优化 (2026-03-03):
+    # - 删除 cci (与bb_pos相关0.97), 用adx替代趋势判断
     STRATEGY_2_FACTORS = {
         'short_term': {
             'factors': ['ret_intraday', 'ret_1d'],
@@ -98,9 +106,9 @@ class StrategyEngine:
             'description': '短期收益 - 日内和日度收益'
         },
         'technical': {
-            'factors': ['cci', 'adx', 'bb_pos', 'dist_ma10'],
+            'factors': ['adx', 'bb_pos', 'dist_ma10'],
             'weight': 0.25,
-            'description': '技术指标 - 趋势和超买超卖'
+            'description': '技术指标 - 趋势强度+布林带+均线偏离'
         },
         'risk': {
             'factors': ['kurt_20', 'skew_20'],

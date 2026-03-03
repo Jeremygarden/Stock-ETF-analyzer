@@ -333,33 +333,101 @@ class DualStrategyModel:
     # ==================== 辅助计算函数 ====================
     
     def _calculate_adx(self, prices, highs, lows, period: int = 14) -> float:
-        """计算ADX (简化版)"""
+        """
+        计算真正的ADX (Average Directional Index)
+        
+        Wilder's ADX公式:
+        1. 计算+DM和-DM (方向变动)
+        2. 计算TR (真实波幅)
+        3. 平滑+DI和-DI
+        4. 计算DX = |+DI - -DI| / (+DI + -DI)
+        5. ADX = DX的平滑均值
+        
+        ADX值解读:
+        - 0-20: 趋势极弱或无趋势
+        - 20-40: 趋势开始形成
+        - 40-60: 强趋势
+        - 60+: 极强趋势
+        """
         try:
-            # 简化: 使用价格波动率作为趋势强度代理
-            if len(prices) < period:
+            if len(prices) < period * 2:
                 return 0
             
-            recent_vol = prices.tail(period).std()
-            older_vol = prices.iloc[:-period].std() if len(prices) > period * 2 else recent_vol
+            # 1. 计算+DM和-DM
+            high_diff = highs.diff()
+            low_diff = -lows.diff()  # 注意取负
             
-            if older_vol > 0:
-                return round((recent_vol / older_vol - 1) * 10 + 20, 1)
-            return 20
+            plus_dm = pd.Series(0.0, index=highs.index)
+            minus_dm = pd.Series(0.0, index=highs.index)
+            
+            # +DM: 当高点上升 > 低点下降，且高点上升 > 0
+            cond_plus = (high_diff > low_diff) & (high_diff > 0)
+            plus_dm[cond_plus] = high_diff[cond_plus]
+            
+            # -DM: 当低点下降 > 高点上升，且低点下降 > 0
+            cond_minus = (low_diff > high_diff) & (low_diff > 0)
+            minus_dm[cond_minus] = low_diff[cond_minus]
+            
+            # 2. 计算TR (真实波幅)
+            tr1 = highs - lows
+            tr2 = abs(highs - prices.shift(1))
+            tr3 = abs(lows - prices.shift(1))
+            tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+            
+            # 3. Wilder平滑 (等价于EMA with alpha=1/period)
+            atr = tr.ewm(alpha=1/period, min_periods=period).mean()
+            plus_dm_smooth = plus_dm.ewm(alpha=1/period, min_periods=period).mean()
+            minus_dm_smooth = minus_dm.ewm(alpha=1/period, min_periods=period).mean()
+            
+            # 4. 计算+DI和-DI
+            plus_di = 100 * plus_dm_smooth / atr
+            minus_di = 100 * minus_dm_smooth / atr
+            
+            # 5. 计算DX和ADX
+            di_sum = plus_di + minus_di
+            di_sum = di_sum.replace(0, np.nan)
+            dx = 100 * abs(plus_di - minus_di) / di_sum
+            
+            adx = dx.ewm(alpha=1/period, min_periods=period).mean()
+            
+            result = adx.iloc[-1]
+            if np.isnan(result):
+                return 0
+            return round(result, 1)
         except:
-            return 20
+            return 0
     
     def _calculate_rsi(self, returns, period: int = 14) -> float:
-        """计算RSI"""
+        """
+        计算RSI (Relative Strength Index)
+        
+        使用Wilder平滑方法:
+        - 先用SMA计算初始值
+        - 后续用EMA平滑
+        
+        RSI值解读:
+        - 0-30: 超卖
+        - 30-70: 正常
+        - 70-100: 超买
+        """
         if len(returns) < period:
             return 50
         
-        gains = returns[returns > 0].sum()
-        losses = abs(returns[returns < 0].sum())
+        # 分离涨跌
+        gains = returns.copy()
+        losses = returns.copy()
+        gains[gains < 0] = 0
+        losses[losses > 0] = 0
+        losses = abs(losses)
         
-        if losses == 0:
+        # Wilder平滑 (EMA with alpha=1/period)
+        avg_gain = gains.ewm(alpha=1/period, min_periods=period).mean()
+        avg_loss = losses.ewm(alpha=1/period, min_periods=period).mean()
+        
+        if avg_loss.iloc[-1] == 0:
             return 100
         
-        rs = gains / losses
+        rs = avg_gain.iloc[-1] / avg_loss.iloc[-1]
         rsi = 100 - (100 / (1 + rs))
         return round(rsi, 1)
     
@@ -566,6 +634,12 @@ def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.Data
     """
     计算多只ETF的策略得分
     
+    优化流程:
+    1. 收集所有ETF的原始因子
+    2. 横截面Z-score标准化 (统一量纲)
+    3. 基于标准化后的因子计算综合得分
+    4. CSMOM排名 + TSMOM过滤
+    
     Args:
         tickers: ETF代码列表
         strategy: 1 或 2
@@ -576,44 +650,145 @@ def calculate_portfolio_scores(tickers: List[str], strategy: int = 1) -> pd.Data
     import time
     
     model = DualStrategyModel(strategy=strategy)
-    results = []
     
+    # ===== 第1阶段: 收集所有ETF原始因子 =====
+    all_factors = []
     for ticker in tickers:
         print(f"  计算 {ticker}...")
         factors = model.calculate_all_factors(ticker)
-        
         if factors.get('success'):
-            score_result = model.calculate_strategy_score(factors)
-            risk_result = model.check_risk_signals(factors)
-            
-            row = {
-                'ticker': ticker,
-                'composite_score': score_result['composite_score'],
-                'risk_level': risk_result['risk_level'],
-                'recommendation': risk_result['recommendation'],
-                'tsmom_signal': factors.get('tsmom_signal', 0),
-                'relative_momentum': factors.get('relative_momentum', 0),
-            }
-            
-            # 添加因子值
-            for factor in model.get_recommended_factors():
-                row[factor] = factors.get(factor, 0)
-            
-            results.append(row)
-        
+            all_factors.append(factors)
         time.sleep(0.2)
+    
+    if not all_factors:
+        return pd.DataFrame()
+    
+    # ===== 第2阶段: Z-score标准化 =====
+    # 需要标准化的因子列表(排除二值/分类因子)
+    numeric_factors = [
+        'ret_1d', 'ret_5d', 'ret_20d', 'ret_60d',
+        'dist_ma10', 'dist_ma20', 'dist_ma60', 'zscore_60',
+        'adx', 'rsi_14', 'macd', 'macd_hist', 'cci',
+        'vol_20', 'atr_ratio', 'bb_pos', 'gk_vol_20',
+        'vol_ratio', 'mfi', 'kurt_20', 'skew_20',
+        'ret_overnight', 'ret_intraday', 'shadow_up', 'shadow_down',
+        'momentum_1m', 'momentum_3m', 'momentum_6m', 'momentum_accel',
+        'relative_momentum', 'earnings_yield', 'roe', 'net_margin',
+        'earnings_growth', 'trading_volume', 'size', 'turnover_change'
+    ]
+    
+    # 不参与标准化的因子 (二值信号)
+    binary_factors = ['tsmom_signal', 'absolute_momentum', 'tsmom_6m', 'csmom_rank']
+    
+    # 构建原始因子矩阵
+    factor_matrix = {}
+    for f in numeric_factors:
+        values = [d.get(f, np.nan) for d in all_factors]
+        factor_matrix[f] = values
+    
+    factor_df = pd.DataFrame(factor_matrix)
+    
+    # Z-score标准化: (x - mean) / std
+    # 对方差为0的因子(如全为0的基本面因子)，标准化后仍为0
+    factor_z = pd.DataFrame(index=factor_df.index, columns=factor_df.columns)
+    zscore_info = {}
+    
+    for col in factor_df.columns:
+        vals = factor_df[col].dropna()
+        if len(vals) > 0 and vals.std() > 1e-8:
+            factor_z[col] = (factor_df[col] - vals.mean()) / vals.std()
+            zscore_info[col] = {'mean': round(vals.mean(), 4), 'std': round(vals.std(), 4), 'status': 'OK'}
+        else:
+            factor_z[col] = 0
+            zscore_info[col] = {'mean': 0, 'std': 0, 'status': 'ZERO_VARIANCE'}
+    
+    # 打印标准化信息
+    zero_var = [k for k, v in zscore_info.items() if v['status'] == 'ZERO_VARIANCE']
+    if zero_var:
+        print(f"\n  ⚠️ 零方差因子(已跳过): {', '.join(zero_var)}")
+    
+    # ===== 第3阶段: 基于Z-score计算综合得分 =====
+    # 反向因子列表: 值越小越好
+    reverse_factors = ['vol_20', 'volatility_1m', 'kurt_20', 'atr_ratio', 'gk_vol_20']
+    
+    results = []
+    for i, factor_data in enumerate(all_factors):
+        ticker = factor_data['ticker']
+        
+        # 用标准化后的因子计算得分
+        scores = {}
+        total_weight = 0
+        
+        for factor_group, config in model.factor_config.items():
+            group_score = 0
+            valid_count = 0
+            
+            for factor in config['factors']:
+                # 二值因子直接使用
+                if factor in binary_factors:
+                    value = factor_data.get(factor, 0)
+                    if value is not None:
+                        group_score += float(value)
+                        valid_count += 1
+                    continue
+                
+                # 数值因子使用Z-score
+                if factor in factor_z.columns:
+                    z_val = factor_z.loc[i, factor]
+                    if pd.notna(z_val):
+                        z_val = float(z_val)
+                        # 反向因子取负
+                        if factor in reverse_factors:
+                            z_val = -z_val
+                        # skew_20: 正偏度好(右尾厚)
+                        if factor == 'skew_20':
+                            z_val = z_val  # 正偏度 → 正z → 高分
+                        group_score += z_val
+                        valid_count += 1
+            
+            if valid_count > 0:
+                group_avg = group_score / valid_count
+                scores[factor_group] = round(group_avg * config['weight'], 4)
+            else:
+                scores[factor_group] = 0
+            
+            total_weight += config['weight']
+        
+        # 综合Z-score得分 → 转换为0-100分
+        raw_score = sum(scores.values()) / total_weight if total_weight > 0 else 0
+        # Z-score范围大约-3到+3，映射到0-100
+        composite = round(max(0, min(100, 50 + raw_score * 15)), 1)
+        
+        risk_result = model.check_risk_signals(factor_data)
+        
+        row = {
+            'ticker': ticker,
+            'composite_score': composite,
+            'risk_level': risk_result['risk_level'],
+            'recommendation': risk_result['recommendation'],
+            'tsmom_signal': factor_data.get('tsmom_signal', 0),
+            'relative_momentum': factor_data.get('relative_momentum', 0),
+            'raw_zscore': round(raw_score, 4),
+        }
+        
+        # 添加关键因子原始值 (供展示)
+        for factor in model.get_recommended_factors():
+            row[f'{factor}'] = factor_data.get(factor, 0)
+        
+        # 添加因子组得分
+        for fg, fs in scores.items():
+            row[f'score_{fg}'] = fs
+        
+        results.append(row)
     
     df = pd.DataFrame(results)
     
-    # ===== 计算CSMOM横截面动量排名 =====
-    # 基于6个月收益在所有ETF中的排名
+    # ===== 第4阶段: CSMOM横截面排名 =====
     if 'relative_momentum' in df.columns and len(df) > 0:
-        # 计算百分位排名 (0-100)
         df['csmom_rank'] = df['relative_momentum'].rank(pct=True) * 100
         
-        # 双动量过滤: 只保留TSMOM为正的ETF
+        # 双动量过滤: TSMOM为负的ETF大幅降分
         if 'tsmom_signal' in df.columns:
-            # 对于TSMOM为负的，大幅降低得分
             df.loc[df['tsmom_signal'] == 0, 'composite_score'] *= 0.3
     
     return df.sort_values('composite_score', ascending=False)
